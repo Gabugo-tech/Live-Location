@@ -165,10 +165,26 @@
       cursor: pointer;
       font-size: 0.9rem;
       font-weight: 600;
-      transition: background 0.2s;
+      transition: background 0.2s, opacity 0.2s;
     }
 
     .stop-btn:hover { background: rgba(248,113,113,0.15); }
+    .stop-btn:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+      color: rgba(255,255,255,0.4);
+    }
+
+    .stopped-banner {
+      background: rgba(248,113,113,0.12);
+      border: 1px solid rgba(248,113,113,0.3);
+      border-radius: 10px;
+      padding: 12px 16px;
+      font-size: 0.88rem;
+      color: #f87171;
+      margin-bottom: 16px;
+      display: none;
+    }
 
     .toast {
       position: fixed;
@@ -229,7 +245,9 @@
 
     <div class="coords" id="coords">Waiting for GPS fix...</div>
 
-    <button class="stop-btn" onclick="stopSharing()">Stop Sharing</button>
+    <div class="stopped-banner" id="stopped-banner">🔴 You have stopped sharing. Viewers have been notified.</div>
+
+    <button class="stop-btn" id="stop-btn" onclick="stopSharing()">Stop Sharing</button>
   </div>
 
   <div class="toast" id="toast">Link copied!</div>
@@ -272,6 +290,8 @@
     const coordsEl  = document.getElementById('coords');
     const selectEl  = document.getElementById('decoy-select');
     const badgeEl   = document.getElementById('spoof-badge');
+    const stopBtn   = document.getElementById('stop-btn');
+    const stoppedBanner = document.getElementById('stopped-banner');
 
     // Offset state — computed once on first fix so movement stays proportional
     let latOffset = 0;
@@ -351,8 +371,22 @@
     function stopSharing() {
       if (watchId !== null) navigator.geolocation.clearWatch(watchId);
       socket.emit('stop-sharing', sessionId);
+
+      // Update status text
       statusEl.textContent = 'You have stopped sharing.';
-      statusEl.className = '';
+      statusEl.className   = '';
+
+      // Clear coords line
+      coordsEl.textContent = '';
+
+      // Show stopped banner, disable button
+      stoppedBanner.style.display = 'block';
+      stopBtn.disabled = true;
+      stopBtn.textContent = 'Sharing Stopped';
+
+      // Stop the pulse animation
+      document.querySelector('.pulse-icon').style.animation = 'none';
+      document.querySelector('.pulse-icon').textContent = '🔴';
     }
 
     function copyLink() {
