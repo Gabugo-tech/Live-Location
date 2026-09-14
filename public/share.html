@@ -82,21 +82,100 @@
       gap: 10px;
     }
 
-    #decoy-select {
+    /* ── Searchable country picker ── */
+    .country-picker {
+      position: relative;
       flex: 1;
+    }
+
+    .country-input-wrap {
+      display: flex;
+      align-items: center;
       background: rgba(255,255,255,0.08);
       border: 1px solid rgba(255,255,255,0.15);
-      color: #fff;
-      padding: 9px 12px;
       border-radius: 8px;
+      padding: 0 10px;
+      gap: 6px;
+      cursor: pointer;
+      transition: border-color 0.2s;
+    }
+
+    .country-input-wrap:focus-within {
+      border-color: rgba(255,255,255,0.4);
+    }
+
+    .country-input-wrap input {
+      flex: 1;
+      background: none;
+      border: none;
+      color: #fff;
+      padding: 9px 4px;
       font-size: 0.88rem;
       outline: none;
       cursor: pointer;
-      appearance: none;
-      -webkit-appearance: none;
+      min-width: 0;
     }
 
-    #decoy-select option { background: #1a1a2e; color: #fff; }
+    .country-input-wrap input::placeholder { color: rgba(255,255,255,0.45); }
+
+    .picker-arrow {
+      color: rgba(255,255,255,0.4);
+      font-size: 0.7rem;
+      flex-shrink: 0;
+      transition: transform 0.2s;
+      pointer-events: none;
+    }
+
+    .picker-arrow.open { transform: rotate(180deg); }
+
+    .country-dropdown {
+      position: absolute;
+      top: calc(100% + 6px);
+      left: 0; right: 0;
+      background: #1e2a45;
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 10px;
+      max-height: 240px;
+      overflow-y: auto;
+      z-index: 999;
+      display: none;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+    }
+
+    .country-dropdown.open { display: block; }
+
+    .country-dropdown::-webkit-scrollbar { width: 5px; }
+    .country-dropdown::-webkit-scrollbar-track { background: transparent; }
+    .country-dropdown::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 3px; }
+
+    .dd-group-label {
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: rgba(255,255,255,0.3);
+      padding: 8px 12px 4px;
+      pointer-events: none;
+    }
+
+    .dd-option {
+      padding: 9px 14px;
+      font-size: 0.88rem;
+      color: rgba(255,255,255,0.85);
+      cursor: pointer;
+      transition: background 0.15s;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .dd-option:hover { background: rgba(255,255,255,0.08); }
+    .dd-option.selected { background: rgba(233,69,96,0.2); color: #fff; }
+    .dd-option.no-results {
+      color: rgba(255,255,255,0.35);
+      font-style: italic;
+      cursor: default;
+      pointer-events: none;
+    }
 
     .decoy-badge {
       font-size: 0.72rem;
@@ -235,101 +314,14 @@
         <span>🎭</span> Location Spoof — viewers will see this country instead
       </div>
       <div class="decoy-row">
-        <select id="decoy-select">
-          <option value="none">No spoof — share real location</option>
-          <optgroup label="🌎 Americas">
-            <option value="US">🇺🇸 United States (New York)</option>
-            <option value="CA">🇨🇦 Canada (Toronto)</option>
-            <option value="MX">🇲🇽 Mexico (Mexico City)</option>
-            <option value="BR">🇧🇷 Brazil (São Paulo)</option>
-            <option value="AR">🇦🇷 Argentina (Buenos Aires)</option>
-            <option value="CO">🇨🇴 Colombia (Bogotá)</option>
-            <option value="CL">🇨🇱 Chile (Santiago)</option>
-            <option value="PE">🇵🇪 Peru (Lima)</option>
-            <option value="VE">🇻🇪 Venezuela (Caracas)</option>
-            <option value="EC">🇪🇨 Ecuador (Quito)</option>
-            <option value="CU">🇨🇺 Cuba (Havana)</option>
-            <option value="PA">🇵🇦 Panama (Panama City)</option>
-          </optgroup>
-          <optgroup label="🌍 Europe">
-            <option value="GB">🇬🇧 United Kingdom (London)</option>
-            <option value="DE">🇩🇪 Germany (Berlin)</option>
-            <option value="FR">🇫🇷 France (Paris)</option>
-            <option value="IT">�� Italy (Rome)</option>
-            <option value="ES">🇪🇸 Spain (Madrid)</option>
-            <option value="PT">�🇵🇹 Portugal (Lisbon)</option>
-            <option value="NL">🇳🇱 Netherlands (Amsterdam)</option>
-            <option value="BE">🇧🇪 Belgium (Brussels)</option>
-            <option value="CH">🇨🇭 Switzerland (Zurich)</option>
-            <option value="AT">🇦🇹 Austria (Vienna)</option>
-            <option value="SE">🇸🇪 Sweden (Stockholm)</option>
-            <option value="NO">🇳🇴 Norway (Oslo)</option>
-            <option value="DK">🇩🇰 Denmark (Copenhagen)</option>
-            <option value="FI">🇫🇮 Finland (Helsinki)</option>
-            <option value="PL">🇵🇱 Poland (Warsaw)</option>
-            <option value="CZ">🇨🇿 Czech Republic (Prague)</option>
-            <option value="HU">🇭🇺 Hungary (Budapest)</option>
-            <option value="RO">🇷🇴 Romania (Bucharest)</option>
-            <option value="GR">🇬🇷 Greece (Athens)</option>
-            <option value="UA">🇺🇦 Ukraine (Kyiv)</option>
-            <option value="RU">🇷🇺 Russia (Moscow)</option>
-          </optgroup>
-          <optgroup label="🌍 Africa">
-            <option value="NG">🇳🇬 Nigeria (Lagos)</option>
-            <option value="ZA">🇿🇦 South Africa (Johannesburg)</option>
-            <option value="EG">🇪🇬 Egypt (Cairo)</option>
-            <option value="KE">🇰🇪 Kenya (Nairobi)</option>
-            <option value="GH">�� Ghana (Accra)</option>
-            <option value="ET">🇪🇹 Ethiopia (Addis Ababa)</option>
-            <option value="TZ">🇹🇿 Tanzania (Dar es Salaam)</option>
-            <option value="SN">🇸🇳 Senegal (Dakar)</option>
-            <option value="CI">🇨🇮 Ivory Coast (Abidjan)</option>
-            <option value="CM">🇨� Cameroon (Yaoundé)</option>
-            <option value="MZ">🇲🇿 Mozambique (Maputo)</option>
-            <option value="AO">🇦🇴 Angola (Luanda)</option>
-            <option value="MA">🇲🇦 Morocco (Rabat)</option>
-            <option value="DZ">🇩🇿 Algeria (Algiers)</option>
-            <option value="TN">🇹🇳 Tunisia (Tunis)</option>
-            <option value="LY">🇱🇾 Libya (Tripoli)</option>
-            <option value="SD">🇸🇩 Sudan (Khartoum)</option>
-            <option value="UG">🇺🇬 Uganda (Kampala)</option>
-          </optgroup>
-          <optgroup label="🌏 Asia">
-            <option value="CN">🇨🇳 China (Beijing)</option>
-            <option value="JP">🇯🇵 Japan (Tokyo)</option>
-            <option value="IN">🇮🇳 India (Mumbai)</option>
-            <option value="KR">🇰🇷 South Korea (Seoul)</option>
-            <option value="SG">🇸🇬 Singapore</option>
-            <option value="ID">�� Indonesia (Jakarta)</option>
-            <option value="PH">🇵🇭 Philippines (Manila)</option>
-            <option value="TH">🇹🇭 Thailand (Bangkok)</option>
-            <option value="VN">🇻🇳 Vietnam (Hanoi)</option>
-            <option value="MY">🇲🇾 Malaysia (Kuala Lumpur)</option>
-            <option value="PK">🇵🇰 Pakistan (Islamabad)</option>
-            <option value="BD">🇧🇩 Bangladesh (Dhaka)</option>
-            <option value="LK">🇱🇰 Sri Lanka (Colombo)</option>
-            <option value="NP">🇳� Nepal (Kathmandu)</option>
-            <option value="MM">🇲🇲 Myanmar (Yangon)</option>
-            <option value="KH">🇰🇭 Cambodia (Phnom Penh)</option>
-            <option value="IQ">🇮🇶 Iraq (Baghdad)</option>
-            <option value="IR">🇮🇷 Iran (Tehran)</option>
-            <option value="SA">🇸🇦 Saudi Arabia (Riyadh)</option>
-            <option value="AE">🇦🇪 UAE (Dubai)</option>
-            <option value="TR">🇹� Turkey (Ankara)</option>
-            <option value="IL">🇮🇱 Israel (Jerusalem)</option>
-            <option value="JO">🇯🇴 Jordan (Amman)</option>
-            <option value="KZ">🇰🇿 Kazakhstan (Astana)</option>
-            <option value="UZ">�� Uzbekistan (Tashkent)</option>
-            <option value="AF">🇦🇫 Afghanistan (Kabul)</option>
-            <option value="TW">🇹🇼 Taiwan (Taipei)</option>
-            <option value="HK">🇭🇰 Hong Kong</option>
-          </optgroup>
-          <optgroup label="🌏 Oceania">
-            <option value="AU">🇦🇺 Australia (Sydney)</option>
-            <option value="NZ">🇳🇿 New Zealand (Auckland)</option>
-            <option value="FJ">🇫🇯 Fiji (Suva)</option>
-          </optgroup>
-        </select>
+        <!-- Custom searchable country picker -->
+        <div class="country-picker" id="country-picker">
+          <div class="country-input-wrap" id="picker-trigger">
+            <input type="text" id="country-search" placeholder="No spoof — share real location" autocomplete="off" />
+            <span class="picker-arrow" id="picker-arrow">▼</span>
+          </div>
+          <div class="country-dropdown" id="country-dropdown"></div>
+        </div>
         <span class="decoy-badge badge-real" id="spoof-badge">REAL</span>
       </div>
     </div>
@@ -463,18 +455,223 @@
 
     const statusEl  = document.getElementById('status');
     const coordsEl  = document.getElementById('coords');
-    const selectEl  = document.getElementById('decoy-select');
     const badgeEl   = document.getElementById('spoof-badge');
     const stopBtn       = document.getElementById('stop-btn');
     const resumeBtn     = document.getElementById('resume-btn');
     const stoppedBanner = document.getElementById('stopped-banner');
 
-    let watchId      = null;  // GPS watch (only used in real-location mode)
-    let spoofInterval = null; // Interval timer (only used in spoof mode)
+    // ── Searchable country picker data ──
+    const COUNTRY_LIST = [
+      { value: 'none', label: 'No spoof — share real location', group: '' },
+      // Americas
+      { value: 'US', label: '🇺🇸 United States (New York)',    group: '🌎 Americas' },
+      { value: 'CA', label: '🇨🇦 Canada (Toronto)',            group: '🌎 Americas' },
+      { value: 'MX', label: '🇲🇽 Mexico (Mexico City)',        group: '🌎 Americas' },
+      { value: 'BR', label: '🇧🇷 Brazil (São Paulo)',          group: '🌎 Americas' },
+      { value: 'AR', label: '🇦🇷 Argentina (Buenos Aires)',    group: '🌎 Americas' },
+      { value: 'CO', label: '🇨🇴 Colombia (Bogotá)',           group: '🌎 Americas' },
+      { value: 'CL', label: '🇨🇱 Chile (Santiago)',            group: '🌎 Americas' },
+      { value: 'PE', label: '🇵🇪 Peru (Lima)',                 group: '🌎 Americas' },
+      { value: 'VE', label: '🇻🇪 Venezuela (Caracas)',         group: '🌎 Americas' },
+      { value: 'EC', label: '🇪🇨 Ecuador (Quito)',             group: '🌎 Americas' },
+      { value: 'CU', label: '🇨🇺 Cuba (Havana)',               group: '🌎 Americas' },
+      { value: 'PA', label: '🇵🇦 Panama (Panama City)',        group: '🌎 Americas' },
+      // Europe
+      { value: 'GB', label: '🇬🇧 United Kingdom (London)',     group: '🌍 Europe' },
+      { value: 'DE', label: '🇩🇪 Germany (Berlin)',            group: '🌍 Europe' },
+      { value: 'FR', label: '🇫🇷 France (Paris)',              group: '🌍 Europe' },
+      { value: 'IT', label: '🇮🇹 Italy (Rome)',                group: '🌍 Europe' },
+      { value: 'ES', label: '🇪🇸 Spain (Madrid)',              group: '🌍 Europe' },
+      { value: 'PT', label: '🇵🇹 Portugal (Lisbon)',           group: '🌍 Europe' },
+      { value: 'NL', label: '🇳🇱 Netherlands (Amsterdam)',     group: '🌍 Europe' },
+      { value: 'BE', label: '🇧🇪 Belgium (Brussels)',          group: '🌍 Europe' },
+      { value: 'CH', label: '🇨🇭 Switzerland (Zurich)',        group: '🌍 Europe' },
+      { value: 'AT', label: '🇦🇹 Austria (Vienna)',            group: '🌍 Europe' },
+      { value: 'SE', label: '🇸🇪 Sweden (Stockholm)',          group: '🌍 Europe' },
+      { value: 'NO', label: '🇳🇴 Norway (Oslo)',               group: '🌍 Europe' },
+      { value: 'DK', label: '🇩🇰 Denmark (Copenhagen)',        group: '🌍 Europe' },
+      { value: 'FI', label: '🇫🇮 Finland (Helsinki)',          group: '🌍 Europe' },
+      { value: 'PL', label: '🇵🇱 Poland (Warsaw)',             group: '🌍 Europe' },
+      { value: 'CZ', label: '🇨🇿 Czech Republic (Prague)',     group: '🌍 Europe' },
+      { value: 'HU', label: '🇭🇺 Hungary (Budapest)',          group: '🌍 Europe' },
+      { value: 'RO', label: '🇷🇴 Romania (Bucharest)',         group: '🌍 Europe' },
+      { value: 'GR', label: '🇬🇷 Greece (Athens)',             group: '🌍 Europe' },
+      { value: 'UA', label: '🇺🇦 Ukraine (Kyiv)',              group: '🌍 Europe' },
+      { value: 'RU', label: '🇷🇺 Russia (Moscow)',             group: '🌍 Europe' },
+      // Africa
+      { value: 'NG', label: '🇳🇬 Nigeria (Lagos)',             group: '🌍 Africa' },
+      { value: 'ZA', label: '🇿🇦 South Africa (Johannesburg)', group: '🌍 Africa' },
+      { value: 'EG', label: '🇪🇬 Egypt (Cairo)',               group: '🌍 Africa' },
+      { value: 'KE', label: '🇰🇪 Kenya (Nairobi)',             group: '🌍 Africa' },
+      { value: 'GH', label: '🇬🇭 Ghana (Accra)',               group: '🌍 Africa' },
+      { value: 'ET', label: '🇪🇹 Ethiopia (Addis Ababa)',      group: '🌍 Africa' },
+      { value: 'TZ', label: '🇹🇿 Tanzania (Dar es Salaam)',    group: '🌍 Africa' },
+      { value: 'SN', label: '🇸🇳 Senegal (Dakar)',             group: '🌍 Africa' },
+      { value: 'CI', label: '🇨🇮 Ivory Coast (Abidjan)',       group: '🌍 Africa' },
+      { value: 'CM', label: '🇨🇲 Cameroon (Yaoundé)',          group: '🌍 Africa' },
+      { value: 'MZ', label: '🇲🇿 Mozambique (Maputo)',         group: '🌍 Africa' },
+      { value: 'AO', label: '🇦🇴 Angola (Luanda)',             group: '🌍 Africa' },
+      { value: 'MA', label: '🇲🇦 Morocco (Rabat)',             group: '🌍 Africa' },
+      { value: 'DZ', label: '🇩🇿 Algeria (Algiers)',           group: '🌍 Africa' },
+      { value: 'TN', label: '🇹🇳 Tunisia (Tunis)',             group: '🌍 Africa' },
+      { value: 'LY', label: '🇱🇾 Libya (Tripoli)',             group: '🌍 Africa' },
+      { value: 'SD', label: '🇸🇩 Sudan (Khartoum)',            group: '🌍 Africa' },
+      { value: 'UG', label: '🇺🇬 Uganda (Kampala)',            group: '🌍 Africa' },
+      // Asia
+      { value: 'CN', label: '🇨🇳 China (Beijing)',             group: '🌏 Asia' },
+      { value: 'JP', label: '🇯🇵 Japan (Tokyo)',               group: '🌏 Asia' },
+      { value: 'IN', label: '🇮🇳 India (Mumbai)',              group: '🌏 Asia' },
+      { value: 'KR', label: '🇰🇷 South Korea (Seoul)',         group: '🌏 Asia' },
+      { value: 'SG', label: '🇸🇬 Singapore',                  group: '🌏 Asia' },
+      { value: 'ID', label: '🇮🇩 Indonesia (Jakarta)',         group: '🌏 Asia' },
+      { value: 'PH', label: '🇵🇭 Philippines (Manila)',        group: '🌏 Asia' },
+      { value: 'TH', label: '🇹🇭 Thailand (Bangkok)',          group: '🌏 Asia' },
+      { value: 'VN', label: '🇻🇳 Vietnam (Hanoi)',             group: '🌏 Asia' },
+      { value: 'MY', label: '🇲🇾 Malaysia (Kuala Lumpur)',     group: '🌏 Asia' },
+      { value: 'PK', label: '🇵🇰 Pakistan (Islamabad)',        group: '🌏 Asia' },
+      { value: 'BD', label: '🇧🇩 Bangladesh (Dhaka)',          group: '🌏 Asia' },
+      { value: 'LK', label: '🇱🇰 Sri Lanka (Colombo)',         group: '🌏 Asia' },
+      { value: 'NP', label: '🇳🇵 Nepal (Kathmandu)',           group: '🌏 Asia' },
+      { value: 'MM', label: '🇲🇲 Myanmar (Yangon)',            group: '🌏 Asia' },
+      { value: 'KH', label: '🇰🇭 Cambodia (Phnom Penh)',       group: '🌏 Asia' },
+      { value: 'IQ', label: '🇮🇶 Iraq (Baghdad)',              group: '🌏 Asia' },
+      { value: 'IR', label: '🇮🇷 Iran (Tehran)',               group: '🌏 Asia' },
+      { value: 'SA', label: '🇸🇦 Saudi Arabia (Riyadh)',       group: '🌏 Asia' },
+      { value: 'AE', label: '🇦🇪 UAE (Dubai)',                 group: '🌏 Asia' },
+      { value: 'TR', label: '🇹🇷 Turkey (Ankara)',             group: '🌏 Asia' },
+      { value: 'IL', label: '🇮🇱 Israel (Jerusalem)',          group: '🌏 Asia' },
+      { value: 'JO', label: '🇯🇴 Jordan (Amman)',              group: '🌏 Asia' },
+      { value: 'KZ', label: '🇰🇿 Kazakhstan (Astana)',         group: '🌏 Asia' },
+      { value: 'UZ', label: '🇺🇿 Uzbekistan (Tashkent)',       group: '🌏 Asia' },
+      { value: 'AF', label: '🇦🇫 Afghanistan (Kabul)',         group: '🌏 Asia' },
+      { value: 'TW', label: '🇹🇼 Taiwan (Taipei)',             group: '🌏 Asia' },
+      { value: 'HK', label: '🇭🇰 Hong Kong',                  group: '🌏 Asia' },
+      // Oceania
+      { value: 'AU', label: '🇦🇺 Australia (Sydney)',          group: '🌏 Oceania' },
+      { value: 'NZ', label: '🇳🇿 New Zealand (Auckland)',      group: '🌏 Oceania' },
+      { value: 'FJ', label: '🇫🇯 Fiji (Suva)',                 group: '🌏 Oceania' },
+    ];
 
-    // Small accumulated drift so the spoofed pin moves naturally (±~5m per update)
-    let driftLat = 0;
-    let driftLng = 0;
+    // ── Picker state ──
+    let selectedValue = 'none';
+    let selectedLabel = 'No spoof — share real location';
+
+    const searchInput  = document.getElementById('country-search');
+    const dropdown     = document.getElementById('country-dropdown');
+    const pickerArrow  = document.getElementById('picker-arrow');
+    const pickerTrigger = document.getElementById('picker-trigger');
+
+    function renderDropdown(query) {
+      const q = query.toLowerCase().trim();
+      dropdown.innerHTML = '';
+      let lastGroup = null;
+      let count = 0;
+
+      COUNTRY_LIST.forEach(item => {
+        if (!item.label.toLowerCase().includes(q)) return;
+        // Group header (skip for top-level "none" and when searching)
+        if (item.group && item.group !== lastGroup && !q) {
+          const hdr = document.createElement('div');
+          hdr.className = 'dd-group-label';
+          hdr.textContent = item.group;
+          dropdown.appendChild(hdr);
+          lastGroup = item.group;
+        }
+        const opt = document.createElement('div');
+        opt.className = 'dd-option' + (item.value === selectedValue ? ' selected' : '');
+        opt.textContent = item.label;
+        opt.dataset.value = item.value;
+        opt.addEventListener('mousedown', (e) => {
+          e.preventDefault();
+          selectCountry(item.value, item.label);
+        });
+        dropdown.appendChild(opt);
+        count++;
+      });
+
+      if (count === 0) {
+        const none = document.createElement('div');
+        none.className = 'dd-option no-results';
+        none.textContent = 'No countries found';
+        dropdown.appendChild(none);
+      }
+    }
+
+    function openDropdown() {
+      renderDropdown('');
+      dropdown.classList.add('open');
+      pickerArrow.classList.add('open');
+      searchInput.select();
+    }
+
+    function closeDropdown() {
+      dropdown.classList.remove('open');
+      pickerArrow.classList.remove('open');
+      // Restore display label if nothing new was typed
+      searchInput.value = selectedValue === 'none' ? '' : selectedLabel;
+      searchInput.placeholder = selectedValue === 'none'
+        ? 'No spoof — share real location'
+        : selectedLabel;
+    }
+
+    function selectCountry(value, label) {
+      selectedValue = value;
+      selectedLabel = label;
+      searchInput.value = value === 'none' ? '' : label;
+      searchInput.placeholder = value === 'none' ? 'No spoof — share real location' : label;
+      dropdown.classList.remove('open');
+      pickerArrow.classList.remove('open');
+
+      // Update badge
+      if (value === 'none') {
+        badgeEl.textContent = 'REAL';
+        badgeEl.className   = 'decoy-badge badge-real';
+      } else {
+        badgeEl.textContent = 'SPOOFED';
+        badgeEl.className   = 'decoy-badge badge-spoofed';
+      }
+
+      driftLat = 0;
+      driftLng = 0;
+      stopCurrentMode();
+      startSharing();
+    }
+
+    pickerTrigger.addEventListener('click', () => {
+      if (dropdown.classList.contains('open')) {
+        closeDropdown();
+      } else {
+        searchInput.value = '';
+        openDropdown();
+      }
+    });
+
+    searchInput.addEventListener('input', () => {
+      renderDropdown(searchInput.value);
+      if (!dropdown.classList.contains('open')) {
+        dropdown.classList.add('open');
+        pickerArrow.classList.add('open');
+      }
+    });
+
+    searchInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeDropdown();
+    });
+
+    // Close when clicking outside
+    document.addEventListener('mousedown', (e) => {
+      if (!document.getElementById('country-picker').contains(e.target)) {
+        closeDropdown();
+      }
+    });
+
+    // Helper used by startSharing / badge logic
+    function getSelectedCountry() { return selectedValue; }
+
+    let watchId       = null;  // GPS watch (only used in real-location mode)
+    let spoofInterval = null;  // Interval timer (only used in spoof mode)
+    let driftLat      = 0;
+    let driftLng      = 0;
 
     // ── Stop whatever is currently running ──
     function stopCurrentMode() {
@@ -488,26 +685,8 @@
       }
     }
 
-    // Update badge when user changes selection
-    selectEl.addEventListener('change', () => {
-      const val = selectEl.value;
-      if (val === 'none') {
-        badgeEl.textContent = 'REAL';
-        badgeEl.className   = 'decoy-badge badge-real';
-      } else {
-        badgeEl.textContent = 'SPOOFED';
-        badgeEl.className   = 'decoy-badge badge-spoofed';
-      }
-      // Reset drift and restart in the new mode
-      driftLat = 0;
-      driftLng = 0;
-      stopCurrentMode();
-      startSharing();
-    });
-
     // ── Spoof mode: stream decoy coordinates on an interval, no GPS needed ──
-    function startSpoofMode(country) {
-      const anchor = DECOY_ANCHORS[country];
+    function startSpoofMode(country) {      const anchor = DECOY_ANCHORS[country];
       statusEl.textContent = '🎭 Live — spoofed location is being shared';
       statusEl.className   = 'status-active';
       coordsEl.textContent = `Streaming from: ${anchor.lat.toFixed(4)}, ${anchor.lng.toFixed(4)}`;
@@ -560,7 +739,7 @@
 
     // ── Entry point ──
     function startSharing() {
-      const country = selectEl.value;
+      const country = getSelectedCountry();
       if (country !== 'none') {
         startSpoofMode(country);
       } else {
