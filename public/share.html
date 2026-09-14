@@ -175,6 +175,25 @@
       color: rgba(255,255,255,0.4);
     }
 
+    .resume-btn {
+      background: linear-gradient(135deg, #4ade80, #16a34a);
+      border: none;
+      color: #fff;
+      padding: 12px 28px;
+      border-radius: 50px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      font-weight: 600;
+      transition: opacity 0.2s, transform 0.2s;
+      box-shadow: 0 4px 16px rgba(74,222,128,0.3);
+      display: none; /* hidden until stopped */
+    }
+
+    .resume-btn:hover {
+      opacity: 0.88;
+      transform: translateY(-1px);
+    }
+
     .stopped-banner {
       background: rgba(248,113,113,0.12);
       border: 1px solid rgba(248,113,113,0.3);
@@ -324,7 +343,10 @@
 
     <div class="stopped-banner" id="stopped-banner">🔴 You have stopped sharing. Viewers have been notified.</div>
 
-    <button class="stop-btn" id="stop-btn" onclick="stopSharing()">Stop Sharing</button>
+    <div style="display:flex; gap:12px; justify-content:center; flex-wrap:wrap;">
+      <button class="stop-btn" id="stop-btn" onclick="stopSharing()">Stop Sharing</button>
+      <button class="resume-btn" id="resume-btn" onclick="resumeSharing()">▶ Resume Sharing</button>
+    </div>
   </div>
 
   <div class="toast" id="toast">Link copied!</div>
@@ -443,7 +465,8 @@
     const coordsEl  = document.getElementById('coords');
     const selectEl  = document.getElementById('decoy-select');
     const badgeEl   = document.getElementById('spoof-badge');
-    const stopBtn   = document.getElementById('stop-btn');
+    const stopBtn       = document.getElementById('stop-btn');
+    const resumeBtn     = document.getElementById('resume-btn');
     const stoppedBanner = document.getElementById('stopped-banner');
 
     let watchId      = null;  // GPS watch (only used in real-location mode)
@@ -555,8 +578,25 @@
       stoppedBanner.style.display = 'block';
       stopBtn.disabled    = true;
       stopBtn.textContent = 'Sharing Stopped';
+      resumeBtn.style.display = 'inline-block';
       document.querySelector('.pulse-icon').style.animation = 'none';
       document.querySelector('.pulse-icon').textContent     = '🔴';
+    }
+
+    function resumeSharing() {
+      // Reset UI to active state
+      stoppedBanner.style.display = 'none';
+      stopBtn.disabled    = false;
+      stopBtn.textContent = 'Stop Sharing';
+      resumeBtn.style.display = 'none';
+      document.querySelector('.pulse-icon').style.animation = 'pulse 1.5s ease-in-out infinite';
+      document.querySelector('.pulse-icon').textContent     = '📡';
+
+      // Rejoin the session room and restart streaming
+      socket.emit('join-share', sessionId);
+      driftLat = 0;
+      driftLng = 0;
+      startSharing();
     }
 
     function copyLink() {
