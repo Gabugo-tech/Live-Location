@@ -208,7 +208,7 @@
   <div class="card">
     <div class="pulse-icon">📡</div>
     <h1>Sharing Your Location</h1>
-    <div id="status">Requesting location access...</div>
+    <div id="status">Choose a spoof country or share your real location below.</div>
 
     <!-- Decoy country picker -->
     <div class="decoy-section">
@@ -293,11 +293,24 @@
     const stopBtn   = document.getElementById('stop-btn');
     const stoppedBanner = document.getElementById('stopped-banner');
 
-    let watchId = null;
+    let watchId      = null;  // GPS watch (only used in real-location mode)
+    let spoofInterval = null; // Interval timer (only used in spoof mode)
 
     // Small accumulated drift so the spoofed pin moves naturally (±~5m per update)
     let driftLat = 0;
     let driftLng = 0;
+
+    // ── Stop whatever is currently running ──
+    function stopCurrentMode() {
+      if (watchId !== null) {
+        navigator.geolocation.clearWatch(watchId);
+        watchId = null;
+      }
+      if (spoofInterval !== null) {
+        clearInterval(spoofInterval);
+        spoofInterval = null;
+      }
+    }
 
     // Update badge when user changes selection
     selectEl.addEventListener('change', () => {
@@ -309,86 +322,88 @@
         badgeEl.textContent = 'SPOOFED';
         badgeEl.className   = 'decoy-badge badge-spoofed';
       }
-      // Reset drift when country changes
+      // Reset drift and restart in the new mode
       driftLat = 0;
       driftLng = 0;
+      stopCurrentMode();
+      startSharing();
     });
 
-    function applySpoof(realLat, realLng) {
-      const country = selectEl.value;
+    // ── Spoof mode: stream decoy coordinates on an interval, no GPS needed ──
+    function startSpoofMode(country) {
+      const anchor = DECOY_ANCHORS[country];
+      statusEl.textContent = '🎭 Live — spoofed location is being shared';
+      statusEl.className   = 'status-active';
+      coordsEl.textContent = `Streaming from: ${anchor.lat.toFixed(4)}, ${anchor.lng.toFixed(4)}`;
 
-      // No spoof — send the real coordinates
-      if (country === 'none') {
-        return { lat: realLat, lng: realLng };
+      function sendSpoofed() {
+        driftLat += (Math.random() - 0.5) * 0.00005;
+        driftLng += (Math.random() - 0.5) * 0.00005;
+        driftLat  = Math.max(-0.0005, Math.min(0.0005, driftLat));
+        driftLng  = Math.max(-0.0005, Math.min(0.0005, driftLng));
+
+        socket.emit('send-location', {
+          sessionId,
+          lat: anchor.lat + driftLat,
+          lng: anchor.lng + driftLng,
+          accuracy: 10
+        });
       }
 
-      // Spoof: use the decoy city's coordinates as the anchor.
-      // Add a tiny random drift each update so the pin moves realistically
-      // (approx ±0.00005 degrees ≈ ±5 metres) without revealing real position.
-      const anchor = DECOY_ANCHORS[country];
-      driftLat += (Math.random() - 0.5) * 0.00005;
-      driftLng += (Math.random() - 0.5) * 0.00005;
-
-      // Keep drift bounded to a small city block (~50m radius)
-      driftLat = Math.max(-0.0005, Math.min(0.0005, driftLat));
-      driftLng = Math.max(-0.0005, Math.min(0.0005, driftLng));
-
-      return {
-        lat: anchor.lat + driftLat,
-        lng: anchor.lng + driftLng
-      };
+      sendSpoofed();                           // send immediately
+      spoofInterval = setInterval(sendSpoofed, 4000); // then every 4 seconds
     }
 
-    function startWatching() {
+    // ── Real mode: use the browser Geolocation API ──
+    function startRealMode() {
       if (!navigator.geolocation) {
         statusEl.textContent = 'Geolocation is not supported by your browser.';
-        statusEl.className = 'status-error';
+        statusEl.className   = 'status-error';
         return;
       }
+      statusEl.textContent = 'Requesting location access...';
+      statusEl.className   = '';
+      coordsEl.textContent = 'Waiting for GPS fix...';
 
       watchId = navigator.geolocation.watchPosition(
         (pos) => {
           const { latitude, longitude, accuracy } = pos.coords;
-          const { lat, lng } = applySpoof(latitude, longitude);
-
-          socket.emit('send-location', { sessionId, lat, lng, accuracy });
-
-          const isSpoofed = selectEl.value !== 'none';
-          statusEl.textContent = isSpoofed
-            ? '🎭 Live — spoofed location is being shared'
-            : '📡 Live — real location is being shared';
-          statusEl.className = 'status-active';
-
-          // Always show the REAL coords to the sharer (private)
-          coordsEl.textContent = `Your real position: ${latitude.toFixed(5)}, ${longitude.toFixed(5)}  ±${Math.round(accuracy)}m`;
+          socket.emit('send-location', { sessionId, lat: latitude, lng: longitude, accuracy });
+          statusEl.textContent = '📡 Live — real location is being shared';
+          statusEl.className   = 'status-active';
+          coordsEl.textContent = `Your position: ${latitude.toFixed(5)}, ${longitude.toFixed(5)}  ±${Math.round(accuracy)}m`;
         },
         (err) => {
           statusEl.textContent = `Location error: ${err.message}`;
-          statusEl.className = 'status-error';
+          statusEl.className   = 'status-error';
+          coordsEl.textContent = '';
         },
         { enableHighAccuracy: true, maximumAge: 5000, timeout: 15000 }
       );
     }
 
+    // ── Entry point ──
+    function startSharing() {
+      const country = selectEl.value;
+      if (country !== 'none') {
+        startSpoofMode(country);
+      } else {
+        startRealMode();
+      }
+    }
+
     function stopSharing() {
-      if (watchId !== null) navigator.geolocation.clearWatch(watchId);
+      stopCurrentMode();
       socket.emit('stop-sharing', sessionId);
 
-      // Update status text
       statusEl.textContent = 'You have stopped sharing.';
       statusEl.className   = '';
-
-      // Clear coords line
       coordsEl.textContent = '';
-
-      // Show stopped banner, disable button
       stoppedBanner.style.display = 'block';
-      stopBtn.disabled = true;
+      stopBtn.disabled    = true;
       stopBtn.textContent = 'Sharing Stopped';
-
-      // Stop the pulse animation
       document.querySelector('.pulse-icon').style.animation = 'none';
-      document.querySelector('.pulse-icon').textContent = '🔴';
+      document.querySelector('.pulse-icon').textContent     = '🔴';
     }
 
     function copyLink() {
@@ -399,7 +414,7 @@
       });
     }
 
-    startWatching();
+    startSharing();
   </script>
 </body>
 </html>
