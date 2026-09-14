@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sharing My Location</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+    }
+
+    .card {
+      background: rgba(255,255,255,0.07);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 20px;
+      padding: 40px;
+      max-width: 500px;
+      width: 90%;
+      text-align: center;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+    }
+
+    .pulse-icon {
+      font-size: 52px;
+      margin-bottom: 16px;
+      display: inline-block;
+      animation: pulse 1.5s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.12); }
+    }
+
+    h1 { font-size: 1.7rem; font-weight: 700; margin-bottom: 8px; }
+
+    #status {
+      color: rgba(255,255,255,0.6);
+      font-size: 0.9rem;
+      margin-bottom: 16px;
+      min-height: 20px;
+    }
+
+    .status-active { color: #4ade80 !important; }
+    .status-error  { color: #f87171 !important; }
+
+    /* ── Decoy selector ── */
+    .decoy-section {
+      background: rgba(0,0,0,0.25);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 12px;
+      padding: 14px 16px;
+      margin-bottom: 16px;
+      text-align: left;
+    }
+
+    .decoy-label {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: rgba(255,255,255,0.4);
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .decoy-label span { font-size: 14px; }
+
+    .decoy-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    #decoy-select {
+      flex: 1;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.15);
+      color: #fff;
+      padding: 9px 12px;
+      border-radius: 8px;
+      font-size: 0.88rem;
+      outline: none;
+      cursor: pointer;
+      appearance: none;
+      -webkit-appearance: none;
+    }
+
+    #decoy-select option { background: #1a1a2e; color: #fff; }
+
+    .decoy-badge {
+      font-size: 0.72rem;
+      padding: 4px 10px;
+      border-radius: 50px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .badge-real    { background: rgba(74,222,128,0.15); color: #4ade80; border: 1px solid #4ade8044; }
+    .badge-spoofed { background: rgba(233,69,96,0.15);  color: #e94560; border: 1px solid #e9456044; }
+
+    /* ── Link box ── */
+    .link-box {
+      background: rgba(0,0,0,0.3);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 12px;
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    #share-link {
+      flex: 1;
+      background: none;
+      border: none;
+      color: #93c5fd;
+      font-size: 0.85rem;
+      outline: none;
+      word-break: break-all;
+      cursor: text;
+    }
+
+    .copy-btn {
+      background: #e94560;
+      border: none;
+      color: #fff;
+      padding: 8px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      font-weight: 600;
+      white-space: nowrap;
+      transition: background 0.2s;
+      flex-shrink: 0;
+    }
+
+    .copy-btn:hover { background: #c23152; }
+
+    .coords {
+      font-size: 0.82rem;
+      color: rgba(255,255,255,0.4);
+      margin-bottom: 24px;
+      min-height: 18px;
+      font-family: monospace;
+    }
+
+    .stop-btn {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.2);
+      color: #f87171;
+      padding: 12px 28px;
+      border-radius: 50px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      font-weight: 600;
+      transition: background 0.2s;
+    }
+
+    .stop-btn:hover { background: rgba(248,113,113,0.15); }
+
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(80px);
+      background: #4ade80;
+      color: #14532d;
+      padding: 10px 24px;
+      border-radius: 50px;
+      font-weight: 600;
+      font-size: 0.88rem;
+      transition: transform 0.3s ease;
+      pointer-events: none;
+    }
+
+    .toast.show { transform: translateX(-50%) translateY(0); }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="pulse-icon">📡</div>
+    <h1>Sharing Your Location</h1>
+    <div id="status">Requesting location access...</div>
+
+    <!-- Decoy country picker -->
+    <div class="decoy-section">
+      <div class="decoy-label">
+        <span>🎭</span> Location Spoof — viewers will see this country instead
+      </div>
+      <div class="decoy-row">
+        <select id="decoy-select">
+          <option value="none">No spoof — share real location</option>
+          <option value="US">🇺🇸 United States (New York)</option>
+          <option value="GB">🇬🇧 United Kingdom (London)</option>
+          <option value="DE">🇩🇪 Germany (Berlin)</option>
+          <option value="FR">🇫🇷 France (Paris)</option>
+          <option value="JP">🇯🇵 Japan (Tokyo)</option>
+          <option value="AU">🇦🇺 Australia (Sydney)</option>
+          <option value="BR">🇧🇷 Brazil (São Paulo)</option>
+          <option value="CA">🇨🇦 Canada (Toronto)</option>
+          <option value="IN">🇮🇳 India (Mumbai)</option>
+          <option value="SG">🇸🇬 Singapore</option>
+          <option value="ZA">🇿🇦 South Africa (Johannesburg)</option>
+          <option value="NG">🇳🇬 Nigeria (Lagos)</option>
+          <option value="EG">🇪🇬 Egypt (Cairo)</option>
+          <option value="MX">🇲🇽 Mexico (Mexico City)</option>
+          <option value="KR">🇰🇷 South Korea (Seoul)</option>
+        </select>
+        <span class="decoy-badge badge-real" id="spoof-badge">REAL</span>
+      </div>
+    </div>
+
+    <div class="link-box">
+      <input id="share-link" type="text" readonly />
+      <button class="copy-btn" onclick="copyLink()">Copy</button>
+    </div>
+
+    <div class="coords" id="coords">Waiting for GPS fix...</div>
+
+    <button class="stop-btn" onclick="stopSharing()">Stop Sharing</button>
+  </div>
+
+  <div class="toast" id="toast">Link copied!</div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    // ── Decoy anchor coordinates (city centres) ──
+    // The offset = decoy_anchor - real_anchor (computed once on first GPS fix).
+    // Every subsequent update adds the same offset, so relative movement stays real.
+    const DECOY_ANCHORS = {
+      US: { lat: 40.7128,  lng: -74.0060  }, // New York
+      GB: { lat: 51.5074,  lng: -0.1278   }, // London
+      DE: { lat: 52.5200,  lng: 13.4050   }, // Berlin
+      FR: { lat: 48.8566,  lng:  2.3522   }, // Paris
+      JP: { lat: 35.6762,  lng: 139.6503  }, // Tokyo
+      AU: { lat: -33.8688, lng: 151.2093  }, // Sydney
+      BR: { lat: -23.5505, lng: -46.6333  }, // São Paulo
+      CA: { lat: 43.6510,  lng: -79.3470  }, // Toronto
+      IN: { lat: 19.0760,  lng: 72.8777   }, // Mumbai
+      SG: { lat:  1.3521,  lng: 103.8198  }, // Singapore
+      ZA: { lat: -26.2041, lng:  28.0473  }, // Johannesburg
+      NG: { lat:  6.5244,  lng:   3.3792  }, // Lagos
+      EG: { lat: 30.0444,  lng:  31.2357  }, // Cairo
+      MX: { lat: 19.4326,  lng: -99.1332  }, // Mexico City
+      KR: { lat: 37.5665,  lng: 126.9780  }, // Seoul
+    };
+
+    // ── Session setup ──
+    const params    = new URLSearchParams(window.location.search);
+    const sessionId = params.get('id');
+    if (!sessionId) window.location.href = '/';
+
+    const viewerUrl = `${window.location.origin}/view.html?id=${sessionId}`;
+    document.getElementById('share-link').value = viewerUrl;
+
+    const socket = io();
+    socket.emit('join-share', sessionId);
+
+    const statusEl  = document.getElementById('status');
+    const coordsEl  = document.getElementById('coords');
+    const selectEl  = document.getElementById('decoy-select');
+    const badgeEl   = document.getElementById('spoof-badge');
+
+    // Offset state — computed once on first fix so movement stays proportional
+    let latOffset = 0;
+    let lngOffset = 0;
+    let firstFix  = true;
+    let watchId   = null;
+
+    // Update badge when user changes selection
+    selectEl.addEventListener('change', () => {
+      const val = selectEl.value;
+      if (val === 'none') {
+        badgeEl.textContent = 'REAL';
+        badgeEl.className   = 'decoy-badge badge-real';
+      } else {
+        badgeEl.textContent = 'SPOOFED';
+        badgeEl.className   = 'decoy-badge badge-spoofed';
+      }
+      // Reset offset so it recalculates on next position update
+      firstFix = true;
+    });
+
+    function applySpoof(realLat, realLng) {
+      const country = selectEl.value;
+      if (country === 'none') {
+        latOffset = 0;
+        lngOffset = 0;
+        firstFix  = false;
+        return { lat: realLat, lng: realLng };
+      }
+
+      if (firstFix) {
+        // Calculate offset once: where do we need to move the real coords to land on the decoy city?
+        const anchor = DECOY_ANCHORS[country];
+        latOffset = anchor.lat - realLat;
+        lngOffset = anchor.lng - realLng;
+        firstFix  = false;
+      }
+
+      // Clamp latitude to valid range [-90, 90]
+      const spoofedLat = Math.max(-90,  Math.min(90,  realLat + latOffset));
+      const spoofedLng = Math.max(-180, Math.min(180, realLng + lngOffset));
+
+      return { lat: spoofedLat, lng: spoofedLng };
+    }
+
+    function startWatching() {
+      if (!navigator.geolocation) {
+        statusEl.textContent = 'Geolocation is not supported by your browser.';
+        statusEl.className = 'status-error';
+        return;
+      }
+
+      watchId = navigator.geolocation.watchPosition(
+        (pos) => {
+          const { latitude, longitude, accuracy } = pos.coords;
+          const { lat, lng } = applySpoof(latitude, longitude);
+
+          socket.emit('send-location', { sessionId, lat, lng, accuracy });
+
+          const isSpoofed = selectEl.value !== 'none';
+          statusEl.textContent = isSpoofed
+            ? '🎭 Live — spoofed location is being shared'
+            : '📡 Live — real location is being shared';
+          statusEl.className = 'status-active';
+
+          // Always show the REAL coords to the sharer (private)
+          coordsEl.textContent = `Your real position: ${latitude.toFixed(5)}, ${longitude.toFixed(5)}  ±${Math.round(accuracy)}m`;
+        },
+        (err) => {
+          statusEl.textContent = `Location error: ${err.message}`;
+          statusEl.className = 'status-error';
+        },
+        { enableHighAccuracy: true, maximumAge: 5000, timeout: 15000 }
+      );
+    }
+
+    function stopSharing() {
+      if (watchId !== null) navigator.geolocation.clearWatch(watchId);
+      socket.emit('stop-sharing', sessionId);
+      statusEl.textContent = 'You have stopped sharing.';
+      statusEl.className = '';
+    }
+
+    function copyLink() {
+      navigator.clipboard.writeText(viewerUrl).then(() => {
+        const toast = document.getElementById('toast');
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 2200);
+      });
+    }
+
+    startWatching();
+  </script>
+</body>
+</html>

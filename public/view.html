@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Live Location Viewer</title>
+
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #0f172a;
+      color: #fff;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── Top bar ── */
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 20px;
+      background: rgba(255,255,255,0.05);
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      z-index: 1000;
+      flex-shrink: 0;
+    }
+
+    .topbar-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #4ade80;
+      animation: blink 1.2s ease-in-out infinite;
+      flex-shrink: 0;
+    }
+
+    .dot.waiting { background: #f59e0b; animation: none; }
+    .dot.stopped { background: #f87171; animation: none; }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.2; }
+    }
+
+    #topbar-status {
+      font-size: 0.9rem;
+      color: rgba(255,255,255,0.75);
+    }
+
+    #coords-display {
+      font-size: 0.78rem;
+      color: rgba(255,255,255,0.4);
+      font-family: monospace;
+    }
+
+    /* ── Map ── */
+    #map {
+      flex: 1;
+      width: 100%;
+    }
+
+    /* ── Info panel ── */
+    .info-panel {
+      background: rgba(255,255,255,0.05);
+      border-top: 1px solid rgba(255,255,255,0.1);
+      padding: 12px 20px;
+      display: flex;
+      gap: 28px;
+      flex-wrap: wrap;
+      flex-shrink: 0;
+    }
+
+    .info-item {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .info-label {
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: rgba(255,255,255,0.35);
+    }
+
+    .info-value {
+      font-size: 0.88rem;
+      color: rgba(255,255,255,0.85);
+      font-family: monospace;
+    }
+
+    /* ── Overlay for waiting/stopped state ── */
+    #overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(15,23,42,0.88);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+      flex-direction: column;
+      gap: 16px;
+      text-align: center;
+      padding: 20px;
+    }
+
+    #overlay.hidden { display: none; }
+
+    .overlay-icon { font-size: 52px; }
+    .overlay-title { font-size: 1.4rem; font-weight: 700; }
+    .overlay-sub   { color: rgba(255,255,255,0.5); font-size: 0.9rem; }
+  </style>
+</head>
+<body>
+
+  <!-- Top status bar -->
+  <div class="topbar">
+    <div class="topbar-left">
+      <div class="dot waiting" id="status-dot"></div>
+      <span id="topbar-status">Waiting for sharer to connect...</span>
+    </div>
+    <span id="coords-display">—</span>
+  </div>
+
+  <!-- Map -->
+  <div id="map"></div>
+
+  <!-- Bottom info strip -->
+  <div class="info-panel">
+    <div class="info-item">
+      <span class="info-label">Latitude</span>
+      <span class="info-value" id="info-lat">—</span>
+    </div>
+    <div class="info-item">
+      <span class="info-label">Longitude</span>
+      <span class="info-value" id="info-lng">—</span>
+    </div>
+    <div class="info-item">
+      <span class="info-label">Accuracy</span>
+      <span class="info-value" id="info-acc">—</span>
+    </div>
+    <div class="info-item">
+      <span class="info-label">Last Update</span>
+      <span class="info-value" id="info-time">—</span>
+    </div>
+  </div>
+
+  <!-- Waiting / stopped overlay -->
+  <div id="overlay">
+    <div class="overlay-icon">⏳</div>
+    <div class="overlay-title">Waiting for location...</div>
+    <div class="overlay-sub">The sharer hasn't sent their location yet.<br>This page will update automatically.</div>
+  </div>
+
+  <!-- Leaflet JS -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <!-- Socket.io -->
+  <script src="/socket.io/socket.io.js"></script>
+
+  <script>
+    const params    = new URLSearchParams(window.location.search);
+    const sessionId = params.get('id');
+
+    if (!sessionId) window.location.href = '/';
+
+    // ── Leaflet map setup ──
+    const map = L.map('map', { zoomControl: true }).setView([0, 0], 2);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+      maxZoom: 19
+    }).addTo(map);
+
+    // Custom red marker icon
+    const markerIcon = L.divIcon({
+      className: '',
+      html: `<div style="
+        width:18px;height:18px;
+        background:#e94560;
+        border:3px solid #fff;
+        border-radius:50%;
+        box-shadow:0 2px 8px rgba(0,0,0,0.5);
+      "></div>`,
+      iconSize: [18, 18],
+      iconAnchor: [9, 9]
+    });
+
+    let marker      = null;
+    let accuracyCircle = null;
+    let firstFix    = true;
+
+    const overlay      = document.getElementById('overlay');
+    const statusDot    = document.getElementById('status-dot');
+    const statusText   = document.getElementById('topbar-status');
+    const coordsDisplay = document.getElementById('coords-display');
+    const infoLat      = document.getElementById('info-lat');
+    const infoLng      = document.getElementById('info-lng');
+    const infoAcc      = document.getElementById('info-acc');
+    const infoTime     = document.getElementById('info-time');
+
+    function updateUI(lat, lng, accuracy, timestamp) {
+      const latlng = [lat, lng];
+
+      // Hide overlay
+      overlay.classList.add('hidden');
+
+      // Update dot
+      statusDot.className = 'dot';
+      statusText.textContent = 'Live — location updating';
+
+      // Coords display
+      coordsDisplay.textContent = `${lat.toFixed(5)}, ${lng.toFixed(5)}`;
+
+      // Info strip
+      infoLat.textContent  = lat.toFixed(6);
+      infoLng.textContent  = lng.toFixed(6);
+      infoAcc.textContent  = `±${Math.round(accuracy)} m`;
+      infoTime.textContent = new Date(timestamp).toLocaleTimeString();
+
+      // Marker
+      if (!marker) {
+        marker = L.marker(latlng, { icon: markerIcon }).addTo(map);
+      } else {
+        marker.setLatLng(latlng);
+      }
+
+      // Accuracy circle
+      if (accuracyCircle) {
+        accuracyCircle.setLatLng(latlng).setRadius(accuracy);
+      } else {
+        accuracyCircle = L.circle(latlng, {
+          radius: accuracy,
+          color: '#e94560',
+          fillColor: '#e94560',
+          fillOpacity: 0.12,
+          weight: 1
+        }).addTo(map);
+      }
+
+      // Fly to location on first fix
+      if (firstFix) {
+        map.flyTo(latlng, 16, { duration: 1.5 });
+        firstFix = false;
+      } else {
+        map.panTo(latlng, { animate: true, duration: 0.8 });
+      }
+    }
+
+    // ── Socket.io ──
+    const socket = io();
+    socket.emit('join-view', sessionId);
+
+    socket.on('location-update', ({ lat, lng, accuracy, timestamp }) => {
+      updateUI(lat, lng, accuracy, timestamp);
+    });
+
+    socket.on('waiting', () => {
+      overlay.classList.remove('hidden');
+      statusDot.className = 'dot waiting';
+      statusText.textContent = 'Waiting for sharer to connect...';
+    });
+
+    socket.on('sharing-stopped', () => {
+      overlay.classList.remove('hidden');
+      overlay.innerHTML = `
+        <div class="overlay-icon">🔴</div>
+        <div class="overlay-title">Sharing Ended</div>
+        <div class="overlay-sub">The person has stopped sharing their location.</div>
+      `;
+      statusDot.className = 'dot stopped';
+      statusText.textContent = 'Sharing stopped';
+    });
+  </script>
+</body>
+</html>
