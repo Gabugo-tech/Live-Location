@@ -29,7 +29,7 @@ app.post('/verify-admin', (req, res) => {
   // Issue a one-time token valid for 10 minutes
   const token = uuidv4();
   validTokens.add(token);
-  setTimeout(() => validTokens.delete(token), 10 * 60 * 1000);
+  setTimeout(() => validTokens.delete(token), 24 * 60 * 60 * 1000);
   res.json({ token });
 });
 
