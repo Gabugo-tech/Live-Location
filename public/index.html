@@ -18,7 +18,7 @@
     }
 
     .card {
-      background: rgba(255, 255, 255, 0.07);
+      background: rgba(255,255,255,0.07);
       backdrop-filter: blur(12px);
       border: 1px solid rgba(255,255,255,0.15);
       border-radius: 20px;
@@ -29,10 +29,7 @@
       box-shadow: 0 20px 60px rgba(0,0,0,0.4);
     }
 
-    .icon {
-      font-size: 56px;
-      margin-bottom: 16px;
-    }
+    .icon { font-size: 56px; margin-bottom: 16px; }
 
     h1 {
       font-size: 2rem;
@@ -56,18 +53,19 @@
       padding: 14px 36px;
       background: linear-gradient(135deg, #e94560, #c23152);
       color: #fff;
-      text-decoration: none;
+      border: none;
       border-radius: 50px;
       font-size: 1rem;
       font-weight: 600;
       letter-spacing: 0.5px;
+      cursor: pointer;
       transition: transform 0.2s, box-shadow 0.2s;
-      box-shadow: 0 4px 20px rgba(233, 69, 96, 0.4);
+      box-shadow: 0 4px 20px rgba(233,69,96,0.4);
     }
 
     .btn:hover {
       transform: translateY(-2px);
-      box-shadow: 0 8px 28px rgba(233, 69, 96, 0.55);
+      box-shadow: 0 8px 28px rgba(233,69,96,0.55);
     }
 
     .steps {
@@ -108,6 +106,137 @@
       font-weight: 700;
       flex-shrink: 0;
     }
+
+    /* ── Modal overlay ── */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(10,14,26,0.85);
+      backdrop-filter: blur(6px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s;
+    }
+
+    .modal-overlay.visible {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .modal {
+      background: #1e2a45;
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 18px;
+      padding: 36px 32px;
+      width: 90%;
+      max-width: 380px;
+      text-align: center;
+      box-shadow: 0 24px 64px rgba(0,0,0,0.6);
+      transform: translateY(20px);
+      transition: transform 0.25s;
+    }
+
+    .modal-overlay.visible .modal { transform: translateY(0); }
+
+    .modal-icon { font-size: 40px; margin-bottom: 12px; }
+
+    .modal h2 {
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .modal p {
+      color: rgba(255,255,255,0.5);
+      font-size: 0.85rem;
+      margin-bottom: 20px;
+    }
+
+    .pw-wrap {
+      display: flex;
+      align-items: center;
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 10px;
+      padding: 0 14px;
+      margin-bottom: 16px;
+      gap: 8px;
+    }
+
+    .pw-wrap:focus-within { border-color: rgba(255,255,255,0.35); }
+
+    #pw-input {
+      flex: 1;
+      background: none;
+      border: none;
+      color: #fff;
+      font-size: 1rem;
+      padding: 12px 0;
+      outline: none;
+      letter-spacing: 2px;
+    }
+
+    #pw-input::placeholder { letter-spacing: 0; color: rgba(255,255,255,0.3); }
+
+    .toggle-pw {
+      background: none;
+      border: none;
+      color: rgba(255,255,255,0.4);
+      cursor: pointer;
+      font-size: 1rem;
+      padding: 0;
+      flex-shrink: 0;
+    }
+
+    .toggle-pw:hover { color: rgba(255,255,255,0.75); }
+
+    .modal-error {
+      color: #f87171;
+      font-size: 0.82rem;
+      margin-bottom: 12px;
+      min-height: 18px;
+    }
+
+    .modal-btns {
+      display: flex;
+      gap: 10px;
+    }
+
+    .cancel-btn {
+      flex: 1;
+      padding: 11px;
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.15);
+      color: rgba(255,255,255,0.6);
+      border-radius: 50px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      font-weight: 600;
+      transition: background 0.2s;
+    }
+
+    .cancel-btn:hover { background: rgba(255,255,255,0.12); }
+
+    .confirm-btn {
+      flex: 2;
+      padding: 11px;
+      background: linear-gradient(135deg, #e94560, #c23152);
+      border: none;
+      color: #fff;
+      border-radius: 50px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      font-weight: 600;
+      transition: opacity 0.2s;
+      box-shadow: 0 4px 16px rgba(233,69,96,0.3);
+    }
+
+    .confirm-btn:hover { opacity: 0.88; }
+    .confirm-btn:disabled { opacity: 0.45; cursor: not-allowed; }
   </style>
 </head>
 <body>
@@ -116,7 +245,7 @@
     <h1>Live Location</h1>
     <p>Share your real-time location with anyone via a simple link. No sign-up needed.</p>
 
-    <a class="btn" href="/create">Share My Location</a>
+    <button class="btn" onclick="openModal()">Share My Location</button>
 
     <div class="steps">
       <h3>How it works</h3>
@@ -126,7 +255,7 @@
       </div>
       <div class="step">
         <div class="step-num">2</div>
-        <span>Allow browser location access and copy your link</span>
+        <span>Enter the admin password to get access</span>
       </div>
       <div class="step">
         <div class="step-num">3</div>
@@ -134,5 +263,98 @@
       </div>
     </div>
   </div>
+
+  <!-- Admin password modal -->
+  <div class="modal-overlay" id="modal-overlay">
+    <div class="modal">
+      <div class="modal-icon">🔐</div>
+      <h2>Admin Access</h2>
+      <p>Enter the admin password to start sharing your location.</p>
+
+      <div class="pw-wrap">
+        <input type="password" id="pw-input" placeholder="Enter password" autocomplete="current-password" />
+        <button class="toggle-pw" onclick="togglePw()" aria-label="Toggle password visibility">👁</button>
+      </div>
+
+      <div class="modal-error" id="modal-error"></div>
+
+      <div class="modal-btns">
+        <button class="cancel-btn" onclick="closeModal()">Cancel</button>
+        <button class="confirm-btn" id="confirm-btn" onclick="submitPassword()">Continue →</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Show unauthorized error if redirected back with ?error=unauthorized
+    if (new URLSearchParams(window.location.search).get('error') === 'unauthorized') {
+      openModal();
+      document.getElementById('modal-error').textContent = 'Access denied. Invalid or expired token.';
+    }
+
+    function openModal() {
+      document.getElementById('modal-overlay').classList.add('visible');
+      setTimeout(() => document.getElementById('pw-input').focus(), 50);
+    }
+
+    function closeModal() {
+      document.getElementById('modal-overlay').classList.remove('visible');
+      document.getElementById('pw-input').value = '';
+      document.getElementById('modal-error').textContent = '';
+    }
+
+    function togglePw() {
+      const input = document.getElementById('pw-input');
+      input.type = input.type === 'password' ? 'text' : 'password';
+    }
+
+    // Allow Enter key to submit
+    document.getElementById('pw-input').addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') submitPassword();
+    });
+
+    // Close modal on overlay click
+    document.getElementById('modal-overlay').addEventListener('click', (e) => {
+      if (e.target === document.getElementById('modal-overlay')) closeModal();
+    });
+
+    async function submitPassword() {
+      const password = document.getElementById('pw-input').value.trim();
+      const errorEl  = document.getElementById('modal-error');
+      const confirmBtn = document.getElementById('confirm-btn');
+
+      if (!password) {
+        errorEl.textContent = 'Please enter a password.';
+        return;
+      }
+
+      confirmBtn.disabled = true;
+      confirmBtn.textContent = 'Checking...';
+      errorEl.textContent = '';
+
+      try {
+        const res  = await fetch('/verify-admin', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ password })
+        });
+        const data = await res.json();
+
+        if (!res.ok) {
+          errorEl.textContent = '❌ Incorrect password. Try again.';
+          document.getElementById('pw-input').value = '';
+          document.getElementById('pw-input').focus();
+        } else {
+          // Redirect to /create with the one-time token
+          window.location.href = `/create?token=${data.token}`;
+        }
+      } catch {
+        errorEl.textContent = 'Network error. Please try again.';
+      } finally {
+        confirmBtn.disabled = false;
+        confirmBtn.textContent = 'Continue →';
+      }
+    }
+  </script>
 </body>
 </html>

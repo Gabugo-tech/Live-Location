@@ -10,11 +10,36 @@ const io = new Server(server);
 
 const PORT = process.env.PORT || 3000;
 
-// Serve static files from /public
+// Admin password — set ADMIN_PASSWORD env variable in Render (or locally in .env)
+// Falls back to 'admin123' for local dev only — always set a real password in production
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'admin123';
+
+// In-memory set of valid tokens (cleared on server restart)
+const validTokens = new Set();
+
+app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Generate a new session ID and redirect to the share page
+// ── Admin password verification ──
+app.post('/verify-admin', (req, res) => {
+  const { password } = req.body;
+  if (!password || password !== ADMIN_PASSWORD) {
+    return res.status(401).json({ error: 'Incorrect password' });
+  }
+  // Issue a one-time token valid for 10 minutes
+  const token = uuidv4();
+  validTokens.add(token);
+  setTimeout(() => validTokens.delete(token), 10 * 60 * 1000);
+  res.json({ token });
+});
+
+// ── Create session — only with a valid admin token ──
 app.get('/create', (req, res) => {
+  const token = req.query.token;
+  if (!token || !validTokens.has(token)) {
+    return res.redirect('/?error=unauthorized');
+  }
+  validTokens.delete(token); // one-time use
   const sessionId = uuidv4();
   res.redirect(`/share.html?id=${sessionId}`);
 });
