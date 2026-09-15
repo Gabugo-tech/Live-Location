@@ -26,11 +26,28 @@ app.post('/verify-admin', (req, res) => {
   if (!password || password !== ADMIN_PASSWORD) {
     return res.status(401).json({ error: 'Incorrect password' });
   }
-  // Issue a one-time token valid for 10 minutes
+  // Issue a session token — admin must re-authenticate after 10 min of inactivity
   const token = uuidv4();
   validTokens.add(token);
+  // Token expires after 24h max; inactivity timeout is handled client-side
   setTimeout(() => validTokens.delete(token), 24 * 60 * 60 * 1000);
   res.json({ token });
+});
+
+// ── Validate admin session token (called by share page to check if still logged in) ──
+app.post('/validate-admin', (req, res) => {
+  const { token } = req.body;
+  if (!token || !validTokens.has(token)) {
+    return res.status(401).json({ valid: false });
+  }
+  res.json({ valid: true });
+});
+
+// ── Logout admin session ──
+app.post('/logout-admin', (req, res) => {
+  const { token } = req.body;
+  if (token) validTokens.delete(token);
+  res.json({ ok: true });
 });
 
 // ── Create session — only with a valid admin token ──

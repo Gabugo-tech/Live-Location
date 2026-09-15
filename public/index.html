@@ -345,7 +345,8 @@
           document.getElementById('pw-input').value = '';
           document.getElementById('pw-input').focus();
         } else {
-          // Redirect to /create with the one-time token
+          // Store token in sessionStorage, then go to /create
+          sessionStorage.setItem('adminToken', data.token);
           window.location.href = `/create?token=${data.token}`;
         }
       } catch {
