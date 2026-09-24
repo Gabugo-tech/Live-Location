@@ -1005,6 +1005,7 @@
 
     function lockScreen() {
       stopCurrentMode();
+      socket.emit('stop-sharing', sessionId);
       document.getElementById('lock-overlay').classList.add('visible');
       setTimeout(() => document.getElementById('lock-pw').focus(), 50);
     }
@@ -1034,6 +1035,7 @@
       });
       sessionStorage.removeItem('adminToken');
       stopCurrentMode();
+      socket.emit('stop-sharing', sessionId);
       window.location.href = '/';
     }
 

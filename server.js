@@ -85,7 +85,13 @@ io.on('connection', (socket) => {
 
     // Send the last known location immediately if available
     if (sessions[sessionId]) {
-      socket.emit('location-update', sessions[sessionId]);
+      if (sessions[sessionId].stopped) {
+        // Sharing was stopped but we still have the last coords — send both
+        socket.emit('location-update', sessions[sessionId]);
+        socket.emit('sharing-stopped', sessions[sessionId]);
+      } else {
+        socket.emit('location-update', sessions[sessionId]);
+      }
     } else {
       socket.emit('waiting'); // sharer hasn't connected yet
     }
@@ -93,17 +99,21 @@ io.on('connection', (socket) => {
 
   // Sharer sends a location update
   socket.on('send-location', ({ sessionId, lat, lng, accuracy }) => {
-    const data = { lat, lng, accuracy, timestamp: Date.now() };
+    const data = { lat, lng, accuracy, timestamp: Date.now(), stopped: false };
     sessions[sessionId] = data;
     // Broadcast to everyone in the session room (viewers)
     io.to(sessionId).emit('location-update', data);
   });
 
-  // Sharer stops sharing
+  // Sharer stops sharing — keep last location so viewers still see it
   socket.on('stop-sharing', (sessionId) => {
-    delete sessions[sessionId];
-    io.to(sessionId).emit('sharing-stopped');
-    console.log(`Session ended: ${sessionId}`);
+    if (sessions[sessionId]) {
+      sessions[sessionId].stopped = true;
+    } else {
+      sessions[sessionId] = { stopped: true };
+    }
+    io.to(sessionId).emit('sharing-stopped', sessions[sessionId]);
+    console.log(`Sharing paused for session: ${sessionId} (last location preserved)`);
   });
 
   socket.on('disconnect', () => {

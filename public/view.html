@@ -49,6 +49,7 @@
 
     .dot.waiting { background: #f59e0b; animation: none; }
     .dot.stopped { background: #f87171; animation: none; }
+    .dot.last-known { background: #f59e0b; animation: none; }
 
     @keyframes blink {
       0%, 100% { opacity: 1; }
@@ -102,7 +103,7 @@
       font-family: monospace;
     }
 
-    /* ── Overlay for waiting/stopped state ── */
+    /* ── Overlay for waiting state only ── */
     #overlay {
       position: absolute;
       inset: 0;
@@ -122,6 +123,24 @@
     .overlay-icon { font-size: 52px; }
     .overlay-title { font-size: 1.4rem; font-weight: 700; }
     .overlay-sub   { color: rgba(255,255,255,0.5); font-size: 0.9rem; }
+
+    /* ── Last-known banner (replaces full overlay when sharing stops) ── */
+    #last-known-banner {
+      display: none;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 20px;
+      background: rgba(248,113,113,0.12);
+      border-bottom: 1px solid rgba(248,113,113,0.3);
+      font-size: 0.82rem;
+      color: #fca5a5;
+      flex-shrink: 0;
+      z-index: 1000;
+    }
+
+    #last-known-banner.visible { display: flex; }
+    #last-known-banner .banner-icon { font-size: 14px; }
+    #last-known-banner .banner-time { margin-left: auto; font-family: monospace; color: rgba(255,255,255,0.4); font-size: 0.75rem; }
   </style>
 </head>
 <body>
@@ -135,10 +154,15 @@
     <span id="coords-display">—</span>
   </div>
 
+  <!-- Last-known location banner -->
+  <div id="last-known-banner">
+    <span class="banner-icon">🔴</span>
+    <span>Sharing stopped — showing last known location</span>
+    <span class="banner-time" id="banner-time"></span>
+  </div>
+
   <!-- Map -->
   <div id="map"></div>
-
-  <!-- Bottom info strip -->
   <div class="info-panel">
     <div class="info-item">
       <span class="info-label">Latitude</span>
@@ -202,24 +226,35 @@
     let accuracyCircle = null;
     let firstFix    = true;
 
-    const overlay      = document.getElementById('overlay');
-    const statusDot    = document.getElementById('status-dot');
-    const statusText   = document.getElementById('topbar-status');
-    const coordsDisplay = document.getElementById('coords-display');
-    const infoLat      = document.getElementById('info-lat');
-    const infoLng      = document.getElementById('info-lng');
-    const infoAcc      = document.getElementById('info-acc');
-    const infoTime     = document.getElementById('info-time');
+    const overlay        = document.getElementById('overlay');
+    const bannerEl       = document.getElementById('last-known-banner');
+    const bannerTime     = document.getElementById('banner-time');
+    const statusDot      = document.getElementById('status-dot');
+    const statusText     = document.getElementById('topbar-status');
+    const coordsDisplay  = document.getElementById('coords-display');
+    const infoLat        = document.getElementById('info-lat');
+    const infoLng        = document.getElementById('info-lng');
+    const infoAcc        = document.getElementById('info-acc');
+    const infoTime       = document.getElementById('info-time');
 
-    function updateUI(lat, lng, accuracy, timestamp) {
+    function updateUI(lat, lng, accuracy, timestamp, isLastKnown = false) {
       const latlng = [lat, lng];
 
-      // Hide overlay
+      // Hide the waiting overlay
       overlay.classList.add('hidden');
 
-      // Update dot
-      statusDot.className = 'dot';
-      statusText.textContent = 'Live — location updating';
+      if (isLastKnown) {
+        // Show the last-known banner, leave map intact
+        bannerEl.classList.add('visible');
+        bannerTime.textContent = `Last seen ${new Date(timestamp).toLocaleTimeString()}`;
+        statusDot.className = 'dot last-known';
+        statusText.textContent = 'Last known location';
+      } else {
+        // Live — hide banner, show green dot
+        bannerEl.classList.remove('visible');
+        statusDot.className = 'dot';
+        statusText.textContent = 'Live — location updating';
+      }
 
       // Coords display
       coordsDisplay.textContent = `${lat.toFixed(5)}, ${lng.toFixed(5)}`;
@@ -227,7 +262,7 @@
       // Info strip
       infoLat.textContent  = lat.toFixed(6);
       infoLng.textContent  = lng.toFixed(6);
-      infoAcc.textContent  = `±${Math.round(accuracy)} m`;
+      infoAcc.textContent  = accuracy ? `±${Math.round(accuracy)} m` : '—';
       infoTime.textContent = new Date(timestamp).toLocaleTimeString();
 
       // Marker
@@ -238,23 +273,25 @@
       }
 
       // Accuracy circle
-      if (accuracyCircle) {
-        accuracyCircle.setLatLng(latlng).setRadius(accuracy);
-      } else {
-        accuracyCircle = L.circle(latlng, {
-          radius: accuracy,
-          color: '#e94560',
-          fillColor: '#e94560',
-          fillOpacity: 0.12,
-          weight: 1
-        }).addTo(map);
+      if (accuracy) {
+        if (accuracyCircle) {
+          accuracyCircle.setLatLng(latlng).setRadius(accuracy);
+        } else {
+          accuracyCircle = L.circle(latlng, {
+            radius: accuracy,
+            color: '#e94560',
+            fillColor: '#e94560',
+            fillOpacity: 0.12,
+            weight: 1
+          }).addTo(map);
+        }
       }
 
       // Fly to location on first fix
       if (firstFix) {
         map.flyTo(latlng, 16, { duration: 1.5 });
         firstFix = false;
-      } else {
+      } else if (!isLastKnown) {
         map.panTo(latlng, { animate: true, duration: 0.8 });
       }
     }
@@ -264,24 +301,28 @@
     socket.emit('join-view', sessionId);
 
     socket.on('location-update', ({ lat, lng, accuracy, timestamp }) => {
-      updateUI(lat, lng, accuracy, timestamp);
+      // A fresh location-update always means live sharing is active
+      updateUI(lat, lng, accuracy, timestamp, false);
     });
 
     socket.on('waiting', () => {
       overlay.classList.remove('hidden');
+      bannerEl.classList.remove('visible');
       statusDot.className = 'dot waiting';
       statusText.textContent = 'Waiting for sharer to connect...';
     });
 
-    socket.on('sharing-stopped', () => {
-      overlay.classList.remove('hidden');
-      overlay.innerHTML = `
-        <div class="overlay-icon">🔴</div>
-        <div class="overlay-title">Sharing Ended</div>
-        <div class="overlay-sub">The person has stopped sharing their location.</div>
-      `;
-      statusDot.className = 'dot stopped';
-      statusText.textContent = 'Sharing stopped';
+    socket.on('sharing-stopped', (data) => {
+      // If the server sent last coords, show them on the map
+      if (data && data.lat != null) {
+        updateUI(data.lat, data.lng, data.accuracy, data.timestamp, true);
+      } else {
+        // No coords at all — just update the status bar, leave map as-is
+        bannerEl.classList.add('visible');
+        bannerTime.textContent = '';
+        statusDot.className = 'dot stopped';
+        statusText.textContent = 'Sharing stopped';
+      }
     });
   </script>
 </body>
