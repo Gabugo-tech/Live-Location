@@ -1,11 +1,11 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="Share your real-time location with anyone via a simple link. No sign-up needed." />
   <meta name="theme-color" content="#0f3460" />
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📍</text></svg>" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>≡ƒôì</text></svg>" />
   <title>Live Location Share</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -110,7 +110,7 @@
       flex-shrink: 0;
     }
 
-    /* ── Modal overlay ── */
+    /* ΓöÇΓöÇ Modal overlay ΓöÇΓöÇ */
     .modal-overlay {
       position: fixed;
       inset: 0;
@@ -244,7 +244,7 @@
 </head>
 <body>
   <div class="card">
-    <div class="icon">📍</div>
+    <div class="icon">≡ƒôì</div>
     <h1>Live Location</h1>
     <p>Share your real-time location with anyone via a simple link. No sign-up needed.</p>
 
@@ -262,7 +262,7 @@
       </div>
       <div class="step">
         <div class="step-num">3</div>
-        <span>Send the link — anyone with it can watch you live on a map</span>
+        <span>Send the link ΓÇö anyone with it can watch you live on a map</span>
       </div>
     </div>
   </div>
@@ -270,24 +270,95 @@
   <!-- Admin password modal -->
   <div class="modal-overlay" id="modal-overlay">
     <div class="modal">
-      <div class="modal-icon">🔐</div>
+      <div class="modal-icon">≡ƒöÉ</div>
       <h2>Admin Access</h2>
       <p>Enter the admin password to start sharing your location.</p>
 
       <div class="pw-wrap">
         <input type="password" id="pw-input" placeholder="Enter password" autocomplete="current-password" />
-        <button class="toggle-pw" onclick="togglePw()" aria-label="Toggle password visibility">👁</button>
+        <button class="toggle-pw" onclick="togglePw()" aria-label="Toggle password visibility">≡ƒæü</button>
       </div>
 
       <div class="modal-error" id="modal-error"></div>
 
       <div class="modal-btns">
         <button class="cancel-btn" onclick="closeModal()">Cancel</button>
-        <button class="confirm-btn" id="confirm-btn" onclick="submitPassword()">Continue →</button>
+        <button class="confirm-btn" id="confirm-btn" onclick="submitPassword()">Continue ΓåÆ</button>
       </div>
     </div>
   </div>
 
-  <script src="/index.js"></script>
+  <script>
+    // Show unauthorized error if redirected back with ?error=unauthorized
+    if (new URLSearchParams(window.location.search).get('error') === 'unauthorized') {
+      openModal();
+      document.getElementById('modal-error').textContent = 'Access denied. Invalid or expired token.';
+    }
+
+    function openModal() {
+      document.getElementById('modal-overlay').classList.add('visible');
+      setTimeout(() => document.getElementById('pw-input').focus(), 50);
+    }
+
+    function closeModal() {
+      document.getElementById('modal-overlay').classList.remove('visible');
+      document.getElementById('pw-input').value = '';
+      document.getElementById('modal-error').textContent = '';
+    }
+
+    function togglePw() {
+      const input = document.getElementById('pw-input');
+      input.type = input.type === 'password' ? 'text' : 'password';
+    }
+
+    // Allow Enter key to submit
+    document.getElementById('pw-input').addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') submitPassword();
+    });
+
+    // Close modal on overlay click
+    document.getElementById('modal-overlay').addEventListener('click', (e) => {
+      if (e.target === document.getElementById('modal-overlay')) closeModal();
+    });
+
+    async function submitPassword() {
+      const password = document.getElementById('pw-input').value.trim();
+      const errorEl  = document.getElementById('modal-error');
+      const confirmBtn = document.getElementById('confirm-btn');
+
+      if (!password) {
+        errorEl.textContent = 'Please enter a password.';
+        return;
+      }
+
+      confirmBtn.disabled = true;
+      confirmBtn.textContent = 'Checking...';
+      errorEl.textContent = '';
+
+      try {
+        const res  = await fetch('/verify-admin', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ password })
+        });
+        const data = await res.json();
+
+        if (!res.ok) {
+          errorEl.textContent = 'Γ¥î Incorrect password. Try again.';
+          document.getElementById('pw-input').value = '';
+          document.getElementById('pw-input').focus();
+        } else {
+          // Store token in sessionStorage, then go to /create
+          sessionStorage.setItem('adminToken', data.token);
+          window.location.href = `/create?token=${data.token}`;
+        }
+      } catch {
+        errorEl.textContent = 'Network error. Please try again.';
+      } finally {
+        confirmBtn.disabled = false;
+        confirmBtn.textContent = 'Continue ΓåÆ';
+      }
+    }
+  </script>
 </body>
 </html>

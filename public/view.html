@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -6,7 +6,7 @@
   <meta name="description" content="Viewing a live shared location in real time." />
   <meta name="theme-color" content="#0f172a" />
   <meta name="robots" content="noindex, nofollow" />
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📍</text></svg>" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>≡ƒôì</text></svg>" />
   <title>Live Location Viewer</title>
 
   <!-- Preconnect to speed up tile + CDN loading -->
@@ -16,7 +16,7 @@
   <link rel="dns-prefetch" href="https://b.tile.openstreetmap.org" />
   <link rel="dns-prefetch" href="https://c.tile.openstreetmap.org" />
 
-  <!-- Leaflet CSS — jsdelivr is faster than unpkg globally -->
+  <!-- Leaflet CSS ΓÇö jsdelivr is faster than unpkg globally -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.min.css" />
 
   <style>
@@ -31,7 +31,7 @@
       flex-direction: column;
     }
 
-    /* ── Top bar ── */
+    /* ΓöÇΓöÇ Top bar ΓöÇΓöÇ */
     .topbar {
       display: flex;
       align-items: center;
@@ -78,13 +78,13 @@
       font-family: monospace;
     }
 
-    /* ── Map ── */
+    /* ΓöÇΓöÇ Map ΓöÇΓöÇ */
     #map {
       flex: 1;
       width: 100%;
     }
 
-    /* ── Info panel ── */
+    /* ΓöÇΓöÇ Info panel ΓöÇΓöÇ */
     .info-panel {
       background: rgba(255,255,255,0.05);
       border-top: 1px solid rgba(255,255,255,0.1);
@@ -114,7 +114,7 @@
       font-family: monospace;
     }
 
-    /* ── Overlay for waiting state only ── */
+    /* ΓöÇΓöÇ Overlay for waiting state only ΓöÇΓöÇ */
     #overlay {
       position: absolute;
       inset: 0;
@@ -135,7 +135,7 @@
     .overlay-title { font-size: 1.4rem; font-weight: 700; }
     .overlay-sub   { color: rgba(255,255,255,0.5); font-size: 0.9rem; }
 
-    /* ── Last-known banner (replaces full overlay when sharing stops) ── */
+    /* ΓöÇΓöÇ Last-known banner (replaces full overlay when sharing stops) ΓöÇΓöÇ */
     #last-known-banner {
       display: none;
       align-items: center;
@@ -162,13 +162,13 @@
       <div class="dot waiting" id="status-dot"></div>
       <span id="topbar-status">Waiting for sharer to connect...</span>
     </div>
-    <span id="coords-display">—</span>
+    <span id="coords-display">ΓÇö</span>
   </div>
 
   <!-- Last-known location banner -->
   <div id="last-known-banner">
-    <span class="banner-icon">🔴</span>
-    <span>Sharing stopped — showing last known location</span>
+    <span class="banner-icon">≡ƒö┤</span>
+    <span>Sharing stopped ΓÇö showing last known location</span>
     <span class="banner-time" id="banner-time"></span>
   </div>
 
@@ -177,33 +177,172 @@
   <div class="info-panel">
     <div class="info-item">
       <span class="info-label">Latitude</span>
-      <span class="info-value" id="info-lat">—</span>
+      <span class="info-value" id="info-lat">ΓÇö</span>
     </div>
     <div class="info-item">
       <span class="info-label">Longitude</span>
-      <span class="info-value" id="info-lng">—</span>
+      <span class="info-value" id="info-lng">ΓÇö</span>
     </div>
     <div class="info-item">
       <span class="info-label">Accuracy</span>
-      <span class="info-value" id="info-acc">—</span>
+      <span class="info-value" id="info-acc">ΓÇö</span>
     </div>
     <div class="info-item">
       <span class="info-label">Last Update</span>
-      <span class="info-value" id="info-time">—</span>
+      <span class="info-value" id="info-time">ΓÇö</span>
     </div>
   </div>
 
   <!-- Waiting / stopped overlay -->
   <div id="overlay">
-    <div class="overlay-icon">⏳</div>
+    <div class="overlay-icon">ΓÅ│</div>
     <div class="overlay-title">Waiting for location...</div>
     <div class="overlay-sub">The sharer hasn't sent their location yet.<br>This page will update automatically.</div>
   </div>
 
-  <!-- Leaflet JS — jsdelivr -->
+  <!-- Leaflet JS ΓÇö jsdelivr -->
   <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.min.js"></script>
   <!-- Socket.io -->
   <script src="/socket.io/socket.io.js"></script>
-  <script src="/view.js"></script>
+
+  <script>
+    const params    = new URLSearchParams(window.location.search);
+    const sessionId = params.get('id');
+
+    if (!sessionId) window.location.href = '/';
+
+    // ΓöÇΓöÇ Leaflet map setup ΓöÇΓöÇ
+    const map = L.map('map', { zoomControl: true }).setView([0, 0], 2);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '┬⌐ <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+      maxZoom: 19
+    }).addTo(map);
+
+    // Custom red marker icon
+    const markerIcon = L.divIcon({
+      className: '',
+      html: `<div style="
+        width:18px;height:18px;
+        background:#e94560;
+        border:3px solid #fff;
+        border-radius:50%;
+        box-shadow:0 2px 8px rgba(0,0,0,0.5);
+      "></div>`,
+      iconSize: [18, 18],
+      iconAnchor: [9, 9]
+    });
+
+    let marker      = null;
+    let accuracyCircle = null;
+    let firstFix    = true;
+
+    const overlay        = document.getElementById('overlay');
+    const bannerEl       = document.getElementById('last-known-banner');
+    const bannerTime     = document.getElementById('banner-time');
+    const statusDot      = document.getElementById('status-dot');
+    const statusText     = document.getElementById('topbar-status');
+    const coordsDisplay  = document.getElementById('coords-display');
+    const infoLat        = document.getElementById('info-lat');
+    const infoLng        = document.getElementById('info-lng');
+    const infoAcc        = document.getElementById('info-acc');
+    const infoTime       = document.getElementById('info-time');
+
+    function formatTime(timestamp, tz) {
+      try {
+        return new Date(timestamp).toLocaleTimeString(undefined, tz ? { timeZone: tz } : {});
+      } catch {
+        return new Date(timestamp).toLocaleTimeString();
+      }
+    }
+
+    function updateUI(lat, lng, accuracy, timestamp, isLastKnown = false, tz = null) {
+      const latlng = [lat, lng];
+
+      // Hide the waiting overlay
+      overlay.classList.add('hidden');
+
+      if (isLastKnown) {
+        // Show the last-known banner, leave map intact
+        bannerEl.classList.add('visible');
+        bannerTime.textContent = `Last seen ${formatTime(timestamp, tz)}`;
+        statusDot.className = 'dot last-known';
+        statusText.textContent = 'Last known location';
+      } else {
+        // Live ΓÇö hide banner, show green dot
+        bannerEl.classList.remove('visible');
+        statusDot.className = 'dot';
+        statusText.textContent = 'Live ΓÇö location updating';
+      }
+
+      // Coords display
+      coordsDisplay.textContent = `${lat.toFixed(5)}, ${lng.toFixed(5)}`;
+
+      // Info strip ΓÇö time shown in spoofed city's timezone if available
+      infoLat.textContent  = lat.toFixed(6);
+      infoLng.textContent  = lng.toFixed(6);
+      infoAcc.textContent  = accuracy ? `┬▒${Math.round(accuracy)} m` : 'ΓÇö';
+      infoTime.textContent = formatTime(timestamp, tz);
+
+      // Marker
+      if (!marker) {
+        marker = L.marker(latlng, { icon: markerIcon }).addTo(map);
+      } else {
+        marker.setLatLng(latlng);
+      }
+
+      // Accuracy circle
+      if (accuracy) {
+        if (accuracyCircle) {
+          accuracyCircle.setLatLng(latlng).setRadius(accuracy);
+        } else {
+          accuracyCircle = L.circle(latlng, {
+            radius: accuracy,
+            color: '#e94560',
+            fillColor: '#e94560',
+            fillOpacity: 0.12,
+            weight: 1
+          }).addTo(map);
+        }
+      }
+
+      // Fly to location on first fix
+      if (firstFix) {
+        map.flyTo(latlng, 16, { duration: 1.5 });
+        firstFix = false;
+      } else if (!isLastKnown) {
+        map.panTo(latlng, { animate: true, duration: 0.8 });
+      }
+    }
+
+    // ΓöÇΓöÇ Socket.io ΓÇö force WebSocket directly, skipping polling upgrade ΓöÇΓöÇ
+    const socket = io({ transports: ['websocket'] });
+    socket.emit('join-view', sessionId);
+
+    socket.on('location-update', ({ lat, lng, accuracy, timestamp, tz }) => {
+      // A fresh location-update always means live sharing is active
+      updateUI(lat, lng, accuracy, timestamp, false, tz || null);
+    });
+
+    socket.on('waiting', () => {
+      overlay.classList.remove('hidden');
+      bannerEl.classList.remove('visible');
+      statusDot.className = 'dot waiting';
+      statusText.textContent = 'Waiting for sharer to connect...';
+    });
+
+    socket.on('sharing-stopped', (data) => {
+      // If the server sent last coords, show them on the map
+      if (data && data.lat != null) {
+        updateUI(data.lat, data.lng, data.accuracy, data.timestamp, true, data.tz || null);
+      } else {
+        // No coords at all ΓÇö just update the status bar, leave map as-is
+        bannerEl.classList.add('visible');
+        bannerTime.textContent = '';
+        statusDot.className = 'dot stopped';
+        statusText.textContent = 'Sharing stopped';
+      }
+    });
+  </script>
 </body>
 </html>
