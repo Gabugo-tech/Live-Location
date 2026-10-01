@@ -248,8 +248,12 @@
     const infoAcc        = document.getElementById('info-acc');
     const infoTime       = document.getElementById('info-time');
 
-    function formatTime(timestamp) {
-      return new Date(timestamp).toLocaleTimeString();
+    function formatTime(timestamp, tz) {
+      try {
+        return new Date(timestamp).toLocaleTimeString(undefined, tz ? { timeZone: tz } : {});
+      } catch {
+        return new Date(timestamp).toLocaleTimeString();
+      }
     }
 
     function updateUI(lat, lng, accuracy, timestamp, isLastKnown = false, tz = null) {
@@ -261,7 +265,7 @@
       if (isLastKnown) {
         // Show the last-known banner, leave map intact
         bannerEl.classList.add('visible');
-        bannerTime.textContent = `Last seen ${formatTime(timestamp)}`;
+        bannerTime.textContent = `Last seen ${formatTime(timestamp, tz)}`;
         statusDot.className = 'dot last-known';
         statusText.textContent = 'Last known location';
       } else {
@@ -278,7 +282,7 @@
       infoLat.textContent  = lat.toFixed(6);
       infoLng.textContent  = lng.toFixed(6);
       infoAcc.textContent  = accuracy ? `±${Math.round(accuracy)} m` : '—';
-      infoTime.textContent = formatTime(timestamp);
+      infoTime.textContent = formatTime(timestamp, tz);
 
       // Marker
       if (!marker) {
