@@ -5,8 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Live Location Viewer</title>
 
-  <!-- Leaflet CSS -->
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <!-- Preconnect to speed up tile + CDN loading -->
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+  <link rel="preconnect" href="https://tile.openstreetmap.org" crossorigin />
+  <link rel="dns-prefetch" href="https://a.tile.openstreetmap.org" />
+  <link rel="dns-prefetch" href="https://b.tile.openstreetmap.org" />
+  <link rel="dns-prefetch" href="https://c.tile.openstreetmap.org" />
+
+  <!-- Leaflet CSS — jsdelivr is faster than unpkg globally -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.min.css" />
 
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -189,8 +196,8 @@
     <div class="overlay-sub">The sharer hasn't sent their location yet.<br>This page will update automatically.</div>
   </div>
 
-  <!-- Leaflet JS -->
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <!-- Leaflet JS — jsdelivr -->
+  <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.min.js"></script>
   <!-- Socket.io -->
   <script src="/socket.io/socket.io.js"></script>
 
@@ -296,8 +303,8 @@
       }
     }
 
-    // ── Socket.io ──
-    const socket = io();
+    // ── Socket.io — force WebSocket directly, skipping polling upgrade ──
+    const socket = io({ transports: ['websocket'] });
     socket.emit('join-view', sessionId);
 
     socket.on('location-update', ({ lat, lng, accuracy, timestamp }) => {

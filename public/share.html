@@ -614,7 +614,7 @@
     const viewerUrl = `${window.location.origin}/view.html?id=${sessionId}`;
     document.getElementById('share-link').value = viewerUrl;
 
-    const socket = io();
+    const socket = io({ transports: ['websocket'] });
     socket.emit('join-share', sessionId);
 
     const statusEl  = document.getElementById('status');
@@ -870,7 +870,7 @@
       }
 
       sendSpoofed();                           // send immediately
-      spoofInterval = setInterval(sendSpoofed, 4000); // then every 4 seconds
+      spoofInterval = setInterval(sendSpoofed, 2000); // then every 2 seconds
     }
 
     // ── Real mode: use the browser Geolocation API ──
@@ -897,7 +897,7 @@
           statusEl.className   = 'status-error';
           coordsEl.textContent = '';
         },
-        { enableHighAccuracy: true, maximumAge: 5000, timeout: 15000 }
+        { enableHighAccuracy: true, maximumAge: 0, timeout: 8000 }
       );
     }
 
