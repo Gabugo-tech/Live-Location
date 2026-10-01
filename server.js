@@ -3,6 +3,8 @@ const http = require('http');
 const { Server } = require('socket.io');
 const { v4: uuidv4 } = require('uuid');
 const path = require('path');
+const helmet = require('helmet');
+const rateLimit = require('express-rate-limit');
 
 const app = express();
 const server = http.createServer(app);
@@ -17,16 +19,43 @@ const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'admin123';
 // In-memory set of valid tokens (cleared on server restart)
 const validTokens = new Set();
 
-app.use(express.json());
+// ── Security headers ──
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: ["'self'", "'unsafe-inline'", "cdn.jsdelivr.net", "cdn.socket.io"],
+      styleSrc:  ["'self'", "'unsafe-inline'", "cdn.jsdelivr.net"],
+      imgSrc:    ["'self'", "data:", "*.tile.openstreetmap.org"],
+      connectSrc:["'self'", "wss:", "ws:"],
+      fontSrc:   ["'self'", "cdn.jsdelivr.net"],
+    }
+  },
+  crossOriginEmbedderPolicy: false // needed for Leaflet tiles
+}));
+
+// ── Rate limiting on auth endpoints ──
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 10,                   // max 10 attempts per window
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Too many attempts, please try again later.' }
+});
+
+app.use(express.json({ limit: '10kb' })); // reject oversized payloads
 app.use(express.static(path.join(__dirname, 'public')));
 
 // ── Admin password verification ──
-app.post('/verify-admin', (req, res) => {
+app.post('/verify-admin', authLimiter, (req, res) => {
   const { password } = req.body;
-  if (!password || password !== ADMIN_PASSWORD) {
+  if (!password || typeof password !== 'string' || password.length > 128) {
+    return res.status(400).json({ error: 'Invalid request' });
+  }
+  if (password !== ADMIN_PASSWORD) {
     return res.status(401).json({ error: 'Incorrect password' });
   }
-  // Issue a session token valid for 24h max; inactivity handled client-side
+  // Issue a session token valid for 24h
   const token = uuidv4();
   validTokens.add(token);
   setTimeout(() => validTokens.delete(token), 24 * 60 * 60 * 1000);
@@ -64,6 +93,18 @@ app.get('/create', (req, res) => {
 // In-memory store: sessionId -> last known location
 const sessions = {};
 
+// Prune sessions that haven't been updated in 48 hours
+const SESSION_TTL_MS = 48 * 60 * 60 * 1000;
+setInterval(() => {
+  const cutoff = Date.now() - SESSION_TTL_MS;
+  for (const id in sessions) {
+    if (sessions[id].timestamp && sessions[id].timestamp < cutoff) {
+      delete sessions[id];
+      console.log(`Pruned stale session: ${id}`);
+    }
+  }
+}, 60 * 60 * 1000); // run every hour
+
 io.on('connection', (socket) => {
   console.log('Socket connected:', socket.id);
 
@@ -99,7 +140,11 @@ io.on('connection', (socket) => {
 
   // Sharer sends a location update
   socket.on('send-location', ({ sessionId, lat, lng, accuracy }) => {
-    const data = { lat, lng, accuracy, timestamp: Date.now(), stopped: false };
+    // Basic input validation
+    if (typeof sessionId !== 'string' || sessionId.length > 64) return;
+    if (typeof lat !== 'number' || typeof lng !== 'number') return;
+    if (lat < -90 || lat > 90 || lng < -180 || lng > 180) return;
+    const data = { lat, lng, accuracy: accuracy || 0, timestamp: Date.now(), stopped: false };
     sessions[sessionId] = data;
     // Broadcast to everyone in the session room (viewers)
     io.to(sessionId).emit('location-update', data);
