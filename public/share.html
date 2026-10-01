@@ -380,96 +380,96 @@
     // Every subsequent update adds the same offset, so relative movement stays real.
     const DECOY_ANCHORS = {
       // Americas
-      US: { lat: 40.7128,   lng: -74.0060  }, // New York
-      CA: { lat: 43.6510,   lng: -79.3470  }, // Toronto
-      MX: { lat: 19.4326,   lng: -99.1332  }, // Mexico City
-      BR: { lat: -23.5505,  lng: -46.6333  }, // São Paulo
-      AR: { lat: -34.6037,  lng: -58.3816  }, // Buenos Aires
-      CO: { lat:  4.7110,   lng: -74.0721  }, // Bogotá
-      CL: { lat: -33.4489,  lng: -70.6693  }, // Santiago
-      PE: { lat: -12.0464,  lng: -77.0428  }, // Lima
-      VE: { lat: 10.4806,   lng: -66.9036  }, // Caracas
-      EC: { lat: -0.1807,   lng: -78.4678  }, // Quito
-      CU: { lat: 23.1136,   lng: -82.3666  }, // Havana
-      PA: { lat:  8.9943,   lng: -79.5188  }, // Panama City
+      US: { lat: 40.7128,   lng: -74.0060,  tz: 'America/New_York'       }, // New York
+      CA: { lat: 43.6510,   lng: -79.3470,  tz: 'America/Toronto'        }, // Toronto
+      MX: { lat: 19.4326,   lng: -99.1332,  tz: 'America/Mexico_City'    }, // Mexico City
+      BR: { lat: -23.5505,  lng: -46.6333,  tz: 'America/Sao_Paulo'      }, // São Paulo
+      AR: { lat: -34.6037,  lng: -58.3816,  tz: 'America/Argentina/Buenos_Aires' }, // Buenos Aires
+      CO: { lat:  4.7110,   lng: -74.0721,  tz: 'America/Bogota'         }, // Bogotá
+      CL: { lat: -33.4489,  lng: -70.6693,  tz: 'America/Santiago'       }, // Santiago
+      PE: { lat: -12.0464,  lng: -77.0428,  tz: 'America/Lima'           }, // Lima
+      VE: { lat: 10.4806,   lng: -66.9036,  tz: 'America/Caracas'        }, // Caracas
+      EC: { lat: -0.1807,   lng: -78.4678,  tz: 'America/Guayaquil'      }, // Quito
+      CU: { lat: 23.1136,   lng: -82.3666,  tz: 'America/Havana'         }, // Havana
+      PA: { lat:  8.9943,   lng: -79.5188,  tz: 'America/Panama'         }, // Panama City
 
       // Europe
-      GB: { lat: 51.5074,   lng:  -0.1278  }, // London
-      DE: { lat: 52.5200,   lng:  13.4050  }, // Berlin
-      FR: { lat: 48.8566,   lng:   2.3522  }, // Paris
-      IT: { lat: 41.9028,   lng:  12.4964  }, // Rome
-      ES: { lat: 40.4168,   lng:  -3.7038  }, // Madrid
-      PT: { lat: 38.7169,   lng:  -9.1399  }, // Lisbon
-      NL: { lat: 52.3676,   lng:   4.9041  }, // Amsterdam
-      BE: { lat: 50.8503,   lng:   4.3517  }, // Brussels
-      CH: { lat: 47.3769,   lng:   8.5417  }, // Zurich
-      AT: { lat: 48.2082,   lng:  16.3738  }, // Vienna
-      SE: { lat: 59.3293,   lng:  18.0686  }, // Stockholm
-      NO: { lat: 59.9139,   lng:  10.7522  }, // Oslo
-      DK: { lat: 55.6761,   lng:  12.5683  }, // Copenhagen
-      FI: { lat: 60.1699,   lng:  24.9384  }, // Helsinki
-      PL: { lat: 52.2297,   lng:  21.0122  }, // Warsaw
-      CZ: { lat: 50.0755,   lng:  14.4378  }, // Prague
-      HU: { lat: 47.4979,   lng:  19.0402  }, // Budapest
-      RO: { lat: 44.4268,   lng:  26.1025  }, // Bucharest
-      GR: { lat: 37.9838,   lng:  23.7275  }, // Athens
-      UA: { lat: 50.4501,   lng:  30.5234  }, // Kyiv
-      RU: { lat: 55.7558,   lng:  37.6173  }, // Moscow
+      GB: { lat: 51.5074,   lng:  -0.1278,  tz: 'Europe/London'          }, // London
+      DE: { lat: 52.5200,   lng:  13.4050,  tz: 'Europe/Berlin'          }, // Berlin
+      FR: { lat: 48.8566,   lng:   2.3522,  tz: 'Europe/Paris'           }, // Paris
+      IT: { lat: 41.9028,   lng:  12.4964,  tz: 'Europe/Rome'            }, // Rome
+      ES: { lat: 40.4168,   lng:  -3.7038,  tz: 'Europe/Madrid'          }, // Madrid
+      PT: { lat: 38.7169,   lng:  -9.1399,  tz: 'Europe/Lisbon'          }, // Lisbon
+      NL: { lat: 52.3676,   lng:   4.9041,  tz: 'Europe/Amsterdam'       }, // Amsterdam
+      BE: { lat: 50.8503,   lng:   4.3517,  tz: 'Europe/Brussels'        }, // Brussels
+      CH: { lat: 47.3769,   lng:   8.5417,  tz: 'Europe/Zurich'          }, // Zurich
+      AT: { lat: 48.2082,   lng:  16.3738,  tz: 'Europe/Vienna'          }, // Vienna
+      SE: { lat: 59.3293,   lng:  18.0686,  tz: 'Europe/Stockholm'       }, // Stockholm
+      NO: { lat: 59.9139,   lng:  10.7522,  tz: 'Europe/Oslo'            }, // Oslo
+      DK: { lat: 55.6761,   lng:  12.5683,  tz: 'Europe/Copenhagen'      }, // Copenhagen
+      FI: { lat: 60.1699,   lng:  24.9384,  tz: 'Europe/Helsinki'        }, // Helsinki
+      PL: { lat: 52.2297,   lng:  21.0122,  tz: 'Europe/Warsaw'          }, // Warsaw
+      CZ: { lat: 50.0755,   lng:  14.4378,  tz: 'Europe/Prague'          }, // Prague
+      HU: { lat: 47.4979,   lng:  19.0402,  tz: 'Europe/Budapest'        }, // Budapest
+      RO: { lat: 44.4268,   lng:  26.1025,  tz: 'Europe/Bucharest'       }, // Bucharest
+      GR: { lat: 37.9838,   lng:  23.7275,  tz: 'Europe/Athens'          }, // Athens
+      UA: { lat: 50.4501,   lng:  30.5234,  tz: 'Europe/Kyiv'            }, // Kyiv
+      RU: { lat: 55.7558,   lng:  37.6173,  tz: 'Europe/Moscow'          }, // Moscow
 
       // Africa
-      NG: { lat:  6.5244,   lng:   3.3792  }, // Lagos
-      ZA: { lat: -26.2041,  lng:  28.0473  }, // Johannesburg
-      EG: { lat: 30.0444,   lng:  31.2357  }, // Cairo
-      KE: { lat: -1.2921,   lng:  36.8219  }, // Nairobi
-      GH: { lat:  5.6037,   lng:  -0.1870  }, // Accra
-      ET: { lat:  9.0320,   lng:  38.7469  }, // Addis Ababa
-      TZ: { lat: -6.7924,   lng:  39.2083  }, // Dar es Salaam
-      SN: { lat: 14.7167,   lng: -17.4677  }, // Dakar
-      CI: { lat:  5.3484,   lng:  -4.0167  }, // Abidjan
-      CM: { lat:  3.8667,   lng:  11.5167  }, // Yaoundé
-      MZ: { lat: -25.9692,  lng:  32.5732  }, // Maputo
-      AO: { lat: -8.8368,   lng:  13.2343  }, // Luanda
-      MA: { lat: 33.9716,   lng:  -6.8498  }, // Rabat
-      DZ: { lat: 36.7372,   lng:   3.0865  }, // Algiers
-      TN: { lat: 36.8190,   lng:  10.1658  }, // Tunis
-      LY: { lat: 32.9020,   lng:  13.1800  }, // Tripoli
-      SD: { lat: 15.5518,   lng:  32.5324  }, // Khartoum
-      UG: { lat:  0.3476,   lng:  32.5825  }, // Kampala
+      NG: { lat:  6.5244,   lng:   3.3792,  tz: 'Africa/Lagos'           }, // Lagos
+      ZA: { lat: -26.2041,  lng:  28.0473,  tz: 'Africa/Johannesburg'    }, // Johannesburg
+      EG: { lat: 30.0444,   lng:  31.2357,  tz: 'Africa/Cairo'           }, // Cairo
+      KE: { lat: -1.2921,   lng:  36.8219,  tz: 'Africa/Nairobi'         }, // Nairobi
+      GH: { lat:  5.6037,   lng:  -0.1870,  tz: 'Africa/Accra'           }, // Accra
+      ET: { lat:  9.0320,   lng:  38.7469,  tz: 'Africa/Addis_Ababa'     }, // Addis Ababa
+      TZ: { lat: -6.7924,   lng:  39.2083,  tz: 'Africa/Dar_es_Salaam'   }, // Dar es Salaam
+      SN: { lat: 14.7167,   lng: -17.4677,  tz: 'Africa/Dakar'           }, // Dakar
+      CI: { lat:  5.3484,   lng:  -4.0167,  tz: 'Africa/Abidjan'         }, // Abidjan
+      CM: { lat:  3.8667,   lng:  11.5167,  tz: 'Africa/Douala'          }, // Yaoundé
+      MZ: { lat: -25.9692,  lng:  32.5732,  tz: 'Africa/Maputo'          }, // Maputo
+      AO: { lat: -8.8368,   lng:  13.2343,  tz: 'Africa/Luanda'          }, // Luanda
+      MA: { lat: 33.9716,   lng:  -6.8498,  tz: 'Africa/Casablanca'      }, // Rabat
+      DZ: { lat: 36.7372,   lng:   3.0865,  tz: 'Africa/Algiers'         }, // Algiers
+      TN: { lat: 36.8190,   lng:  10.1658,  tz: 'Africa/Tunis'           }, // Tunis
+      LY: { lat: 32.9020,   lng:  13.1800,  tz: 'Africa/Tripoli'         }, // Tripoli
+      SD: { lat: 15.5518,   lng:  32.5324,  tz: 'Africa/Khartoum'        }, // Khartoum
+      UG: { lat:  0.3476,   lng:  32.5825,  tz: 'Africa/Kampala'         }, // Kampala
 
       // Asia
-      CN: { lat: 39.9042,   lng: 116.4074  }, // Beijing
-      JP: { lat: 35.6762,   lng: 139.6503  }, // Tokyo
-      IN: { lat: 19.0760,   lng:  72.8777  }, // Mumbai
-      KR: { lat: 37.5735,   lng: 126.9788  }, // Seoul Jongno Police Station
-      SG: { lat:  1.3521,   lng: 103.8198  }, // Singapore
-      ID: { lat: -6.2088,   lng: 106.8456  }, // Jakarta
-      PH: { lat: 14.5995,   lng: 120.9842  }, // Manila
-      TH: { lat: 13.7563,   lng: 100.5018  }, // Bangkok
-      VN: { lat: 21.0285,   lng: 105.8542  }, // Hanoi
-      MY: { lat:  3.1390,   lng: 101.6869  }, // Kuala Lumpur
-      PK: { lat: 33.6844,   lng:  73.0479  }, // Islamabad
-      BD: { lat: 23.8103,   lng:  90.4125  }, // Dhaka
-      LK: { lat:  6.9271,   lng:  79.8612  }, // Colombo
-      NP: { lat: 27.7172,   lng:  85.3240  }, // Kathmandu
-      MM: { lat: 16.8409,   lng:  96.1735  }, // Yangon
-      KH: { lat: 11.5564,   lng: 104.9282  }, // Phnom Penh
-      IQ: { lat: 33.3152,   lng:  44.3661  }, // Baghdad
-      IR: { lat: 35.6892,   lng:  51.3890  }, // Tehran
-      SA: { lat: 24.7136,   lng:  46.6753  }, // Riyadh
-      AE: { lat: 25.2048,   lng:  55.2708  }, // Dubai
-      TR: { lat: 39.9334,   lng:  32.8597  }, // Ankara
-      IL: { lat: 31.7683,   lng:  35.2137  }, // Jerusalem
-      JO: { lat: 31.9454,   lng:  35.9284  }, // Amman
-      KZ: { lat: 51.1801,   lng:  71.4460  }, // Astana
-      UZ: { lat: 41.2995,   lng:  69.2401  }, // Tashkent
-      AF: { lat: 34.5553,   lng:  69.2075  }, // Kabul
-      TW: { lat: 25.0330,   lng: 121.5654  }, // Taipei
-      HK: { lat: 22.3193,   lng: 114.1694  }, // Hong Kong
+      CN: { lat: 39.9042,   lng: 116.4074,  tz: 'Asia/Shanghai'          }, // Beijing
+      JP: { lat: 35.6762,   lng: 139.6503,  tz: 'Asia/Tokyo'             }, // Tokyo
+      IN: { lat: 19.0760,   lng:  72.8777,  tz: 'Asia/Kolkata'           }, // Mumbai
+      KR: { lat: 37.5735,   lng: 126.9788,  tz: 'Asia/Seoul'             }, // Seoul
+      SG: { lat:  1.3521,   lng: 103.8198,  tz: 'Asia/Singapore'         }, // Singapore
+      ID: { lat: -6.2088,   lng: 106.8456,  tz: 'Asia/Jakarta'           }, // Jakarta
+      PH: { lat: 14.5995,   lng: 120.9842,  tz: 'Asia/Manila'            }, // Manila
+      TH: { lat: 13.7563,   lng: 100.5018,  tz: 'Asia/Bangkok'           }, // Bangkok
+      VN: { lat: 21.0285,   lng: 105.8542,  tz: 'Asia/Ho_Chi_Minh'       }, // Hanoi
+      MY: { lat:  3.1390,   lng: 101.6869,  tz: 'Asia/Kuala_Lumpur'      }, // Kuala Lumpur
+      PK: { lat: 33.6844,   lng:  73.0479,  tz: 'Asia/Karachi'           }, // Islamabad
+      BD: { lat: 23.8103,   lng:  90.4125,  tz: 'Asia/Dhaka'             }, // Dhaka
+      LK: { lat:  6.9271,   lng:  79.8612,  tz: 'Asia/Colombo'           }, // Colombo
+      NP: { lat: 27.7172,   lng:  85.3240,  tz: 'Asia/Kathmandu'         }, // Kathmandu
+      MM: { lat: 16.8409,   lng:  96.1735,  tz: 'Asia/Rangoon'           }, // Yangon
+      KH: { lat: 11.5564,   lng: 104.9282,  tz: 'Asia/Phnom_Penh'        }, // Phnom Penh
+      IQ: { lat: 33.3152,   lng:  44.3661,  tz: 'Asia/Baghdad'           }, // Baghdad
+      IR: { lat: 35.6892,   lng:  51.3890,  tz: 'Asia/Tehran'            }, // Tehran
+      SA: { lat: 24.7136,   lng:  46.6753,  tz: 'Asia/Riyadh'            }, // Riyadh
+      AE: { lat: 25.2048,   lng:  55.2708,  tz: 'Asia/Dubai'             }, // Dubai
+      TR: { lat: 39.9334,   lng:  32.8597,  tz: 'Europe/Istanbul'        }, // Ankara
+      IL: { lat: 31.7683,   lng:  35.2137,  tz: 'Asia/Jerusalem'         }, // Jerusalem
+      JO: { lat: 31.9454,   lng:  35.9284,  tz: 'Asia/Amman'             }, // Amman
+      KZ: { lat: 51.1801,   lng:  71.4460,  tz: 'Asia/Almaty'            }, // Astana
+      UZ: { lat: 41.2995,   lng:  69.2401,  tz: 'Asia/Tashkent'          }, // Tashkent
+      AF: { lat: 34.5553,   lng:  69.2075,  tz: 'Asia/Kabul'             }, // Kabul
+      TW: { lat: 25.0330,   lng: 121.5654,  tz: 'Asia/Taipei'            }, // Taipei
+      HK: { lat: 22.3193,   lng: 114.1694,  tz: 'Asia/Hong_Kong'         }, // Hong Kong
 
       // Oceania
-      AU: { lat: -33.8688,  lng: 151.2093  }, // Sydney
-      NZ: { lat: -36.8485,  lng: 174.7633  }, // Auckland
-      FJ: { lat: -18.1416,  lng: 178.4419  }, // Suva
+      AU: { lat: -33.8688,  lng: 151.2093,  tz: 'Australia/Sydney'       }, // Sydney
+      NZ: { lat: -36.8485,  lng: 174.7633,  tz: 'Pacific/Auckland'       }, // Auckland
+      FJ: { lat: -18.1416,  lng: 178.4419,  tz: 'Pacific/Fiji'           }, // Suva
     };
 
     // ── Session setup ──
@@ -731,7 +731,8 @@
           sessionId,
           lat: anchor.lat + driftLat,
           lng: anchor.lng + driftLng,
-          accuracy: 10
+          accuracy: 10,
+          tz: anchor.tz
         });
       }
 
@@ -753,6 +754,7 @@
       watchId = navigator.geolocation.watchPosition(
         (pos) => {
           const { latitude, longitude, accuracy } = pos.coords;
+          // No tz for real location — viewer shows their own local time
           socket.emit('send-location', { sessionId, lat: latitude, lng: longitude, accuracy });
           statusEl.textContent = '📡 Live — real location is being shared';
           statusEl.className   = 'status-active';
@@ -847,7 +849,7 @@
       });
       sessionStorage.removeItem('adminToken');
       stopCurrentMode();
-      socket.emit('stop-sharing', sessionId);
+      // Do NOT emit stop-sharing — last location stays visible to viewers
       window.location.href = '/';
     }
 

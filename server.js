@@ -139,12 +139,20 @@ io.on('connection', (socket) => {
   });
 
   // Sharer sends a location update
-  socket.on('send-location', ({ sessionId, lat, lng, accuracy }) => {
+  socket.on('send-location', ({ sessionId, lat, lng, accuracy, tz }) => {
     // Basic input validation
     if (typeof sessionId !== 'string' || sessionId.length > 64) return;
     if (typeof lat !== 'number' || typeof lng !== 'number') return;
     if (lat < -90 || lat > 90 || lng < -180 || lng > 180) return;
-    const data = { lat, lng, accuracy: accuracy || 0, timestamp: Date.now(), stopped: false };
+    const data = {
+      lat,
+      lng,
+      accuracy: accuracy || 0,
+      timestamp: Date.now(),
+      stopped: false,
+      // tz is optional — only present for spoofed locations
+      ...(tz && typeof tz === 'string' && tz.length < 64 ? { tz } : {})
+    };
     sessions[sessionId] = data;
     // Broadcast to everyone in the session room (viewers)
     io.to(sessionId).emit('location-update', data);
