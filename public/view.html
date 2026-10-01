@@ -182,7 +182,7 @@
 
     if (!sessionId) window.location.href = '/';
 
-    const map = L.map('map', { zoomControl: true }).setView([0, 0], 2);
+    const map = L.map('map', { zoomControl: true }).setView([20, 0], 2);
 
     L.tileLayer('https://maps.wikimedia.org/osm-intl/{z}/{x}/{y}{r}.png', {
       attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="https://maps.wikimedia.org">Wikimedia Maps</a>',
@@ -202,6 +202,15 @@
     let marker         = null;
     let accuracyCircle = null;
     let firstFix       = true;
+    let pendingUpdate  = null; // holds location data received before map is ready
+
+    // Fire any queued location update once the map is fully loaded
+    map.whenReady(function() {
+      if (pendingUpdate) {
+        updateUI(pendingUpdate.lat, pendingUpdate.lng, pendingUpdate.accuracy, pendingUpdate.timestamp, pendingUpdate.isLastKnown, pendingUpdate.tz);
+        pendingUpdate = null;
+      }
+    });
 
     const overlay       = document.getElementById('overlay');
     const bannerEl      = document.getElementById('last-known-banner');
@@ -225,6 +234,12 @@
     function updateUI(lat, lng, accuracy, timestamp, isLastKnown, tz) {
       isLastKnown = isLastKnown || false;
       tz = tz || null;
+
+      // If map isn't ready yet, queue the update
+      if (!map._loaded) {
+        pendingUpdate = { lat, lng, accuracy, timestamp, isLastKnown, tz };
+        return;
+      }
 
       overlay.classList.add('hidden');
 
