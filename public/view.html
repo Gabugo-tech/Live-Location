@@ -11,10 +11,7 @@
 
   <!-- Preconnect to speed up tile + CDN loading -->
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
-  <link rel="preconnect" href="https://tile.openstreetmap.org" crossorigin />
-  <link rel="dns-prefetch" href="https://a.tile.openstreetmap.org" />
-  <link rel="dns-prefetch" href="https://b.tile.openstreetmap.org" />
-  <link rel="dns-prefetch" href="https://c.tile.openstreetmap.org" />
+  <link rel="preconnect" href="https://maps.wikimedia.org" crossorigin />
 
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.min.css" />
 
@@ -187,11 +184,11 @@
 
     const map = L.map('map', { zoomControl: true }).setView([0, 0], 2);
 
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+    L.tileLayer('https://maps.wikimedia.org/osm-intl/{z}/{x}/{y}{r}.png', {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="https://maps.wikimedia.org">Wikimedia Maps</a>',
       maxZoom: 19,
-      keepBuffer: 4,        // pre-fetch more surrounding tiles
-      updateWhenIdle: false, // update tiles while panning, not just after
+      keepBuffer: 4,
+      updateWhenIdle: false,
       updateWhenZooming: false
     }).addTo(map);
 

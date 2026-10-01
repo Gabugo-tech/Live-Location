@@ -31,7 +31,7 @@ app.use(helmet({
       scriptSrc:     ["'self'", "'unsafe-inline'", "cdn.jsdelivr.net"],
       scriptSrcAttr: ["'unsafe-inline'"], // allow onclick= handlers
       styleSrc:      ["'self'", "'unsafe-inline'", "cdn.jsdelivr.net"],
-      imgSrc:        ["'self'", "data:", "*.tile.openstreetmap.org"],
+      imgSrc:        ["'self'", "data:", "maps.wikimedia.org"],
       connectSrc:    ["'self'", "wss:", "ws:"],
       fontSrc:       ["'self'", "cdn.jsdelivr.net"],
     }
