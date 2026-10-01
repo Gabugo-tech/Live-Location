@@ -6,11 +6,10 @@
   <meta name="description" content="Sharing your live location in real time." />
   <meta name="theme-color" content="#0f3460" />
   <meta name="robots" content="noindex, nofollow" />
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>≡ƒôí</text></svg>" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#x1F4E1;</text></svg>" />
   <title>Sharing My Location</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
-
     body {
       font-family: 'Segoe UI', sans-serif;
       background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
@@ -20,7 +19,6 @@
       justify-content: center;
       color: #fff;
     }
-
     .card {
       background: rgba(255,255,255,0.07);
       backdrop-filter: blur(12px);
@@ -32,38 +30,30 @@
       text-align: center;
       box-shadow: 0 20px 60px rgba(0,0,0,0.4);
     }
-
     .pulse-icon {
       font-size: 52px;
       margin-bottom: 16px;
       display: inline-block;
       animation: pulse 1.5s ease-in-out infinite;
     }
-
     @keyframes pulse {
       0%, 100% { transform: scale(1); }
       50% { transform: scale(1.12); }
     }
-
     h1 { font-size: 1.7rem; font-weight: 700; margin-bottom: 8px; }
-
     #status {
       color: rgba(255,255,255,0.6);
       font-size: 0.9rem;
       margin-bottom: 16px;
       min-height: 20px;
     }
-
     .status-active { color: #4ade80 !important; }
     .status-error  { color: #f87171 !important; }
-
-    /* ΓöÇΓöÇ Sign-out bar ΓöÇΓöÇ */
     .signout-bar {
       display: flex;
       justify-content: flex-end;
       margin-bottom: 14px;
     }
-
     .signout-btn-sm {
       background: none;
       border: 1px solid rgba(255,255,255,0.12);
@@ -75,10 +65,7 @@
       transition: color 0.2s, border-color 0.2s;
       white-space: nowrap;
     }
-
     .signout-btn-sm:hover { color: #f87171; border-color: rgba(248,113,113,0.4); }
-
-    /* ΓöÇΓöÇ Decoy selector ΓöÇΓöÇ */
     .decoy-section {
       background: rgba(0,0,0,0.25);
       border: 1px solid rgba(255,255,255,0.1);
@@ -87,7 +74,6 @@
       margin-bottom: 16px;
       text-align: left;
     }
-
     .decoy-label {
       font-size: 0.72rem;
       text-transform: uppercase;
@@ -98,21 +84,9 @@
       align-items: center;
       gap: 6px;
     }
-
     .decoy-label span { font-size: 14px; }
-
-    .decoy-row {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    /* ΓöÇΓöÇ Searchable country picker ΓöÇΓöÇ */
-    .country-picker {
-      position: relative;
-      flex: 1;
-    }
-
+    .decoy-row { display: flex; align-items: center; gap: 10px; }
+    .country-picker { position: relative; flex: 1; }
     .country-input-wrap {
       display: flex;
       align-items: center;
@@ -124,11 +98,7 @@
       cursor: pointer;
       transition: border-color 0.2s;
     }
-
-    .country-input-wrap:focus-within {
-      border-color: rgba(255,255,255,0.4);
-    }
-
+    .country-input-wrap:focus-within { border-color: rgba(255,255,255,0.4); }
     .country-input-wrap input {
       flex: 1;
       background: none;
@@ -140,9 +110,7 @@
       cursor: pointer;
       min-width: 0;
     }
-
     .country-input-wrap input::placeholder { color: rgba(255,255,255,0.45); }
-
     .picker-arrow {
       color: rgba(255,255,255,0.4);
       font-size: 0.7rem;
@@ -150,9 +118,7 @@
       transition: transform 0.2s;
       pointer-events: none;
     }
-
     .picker-arrow.open { transform: rotate(180deg); }
-
     .country-dropdown {
       position: absolute;
       top: calc(100% + 6px);
@@ -166,13 +132,10 @@
       display: none;
       box-shadow: 0 8px 32px rgba(0,0,0,0.5);
     }
-
     .country-dropdown.open { display: block; }
-
     .country-dropdown::-webkit-scrollbar { width: 5px; }
     .country-dropdown::-webkit-scrollbar-track { background: transparent; }
     .country-dropdown::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 3px; }
-
     .dd-group-label {
       font-size: 0.68rem;
       text-transform: uppercase;
@@ -181,7 +144,6 @@
       padding: 8px 12px 4px;
       pointer-events: none;
     }
-
     .dd-option {
       padding: 9px 14px;
       font-size: 0.88rem;
@@ -192,7 +154,6 @@
       overflow: hidden;
       text-overflow: ellipsis;
     }
-
     .dd-option:hover { background: rgba(255,255,255,0.08); }
     .dd-option.selected { background: rgba(233,69,96,0.2); color: #fff; }
     .dd-option.no-results {
@@ -201,7 +162,6 @@
       cursor: default;
       pointer-events: none;
     }
-
     .decoy-badge {
       font-size: 0.72rem;
       padding: 4px 10px;
@@ -209,11 +169,8 @@
       font-weight: 600;
       white-space: nowrap;
     }
-
     .badge-real    { background: rgba(74,222,128,0.15); color: #4ade80; border: 1px solid #4ade8044; }
     .badge-spoofed { background: rgba(233,69,96,0.15);  color: #e94560; border: 1px solid #e9456044; }
-
-    /* ΓöÇΓöÇ Link box ΓöÇΓöÇ */
     .link-box {
       background: rgba(0,0,0,0.3);
       border: 1px solid rgba(255,255,255,0.15);
@@ -224,7 +181,6 @@
       gap: 10px;
       margin-bottom: 16px;
     }
-
     #share-link {
       flex: 1;
       background: none;
@@ -235,7 +191,6 @@
       word-break: break-all;
       cursor: text;
     }
-
     .copy-btn {
       background: #e94560;
       border: none;
@@ -249,9 +204,7 @@
       transition: background 0.2s;
       flex-shrink: 0;
     }
-
     .copy-btn:hover { background: #c23152; }
-
     .coords {
       font-size: 0.82rem;
       color: rgba(255,255,255,0.4);
@@ -259,7 +212,6 @@
       min-height: 18px;
       font-family: monospace;
     }
-
     .stop-btn {
       background: rgba(255,255,255,0.08);
       border: 1px solid rgba(255,255,255,0.2);
@@ -271,14 +223,8 @@
       font-weight: 600;
       transition: background 0.2s, opacity 0.2s;
     }
-
     .stop-btn:hover { background: rgba(248,113,113,0.15); }
-    .stop-btn:disabled {
-      opacity: 0.35;
-      cursor: not-allowed;
-      color: rgba(255,255,255,0.4);
-    }
-
+    .stop-btn:disabled { opacity: 0.35; cursor: not-allowed; color: rgba(255,255,255,0.4); }
     .resume-btn {
       background: linear-gradient(135deg, #4ade80, #16a34a);
       border: none;
@@ -290,14 +236,9 @@
       font-weight: 600;
       transition: opacity 0.2s, transform 0.2s;
       box-shadow: 0 4px 16px rgba(74,222,128,0.3);
-      display: none; /* hidden until stopped */
+      display: none;
     }
-
-    .resume-btn:hover {
-      opacity: 0.88;
-      transform: translateY(-1px);
-    }
-
+    .resume-btn:hover { opacity: 0.88; transform: translateY(-1px); }
     .stopped-banner {
       background: rgba(248,113,113,0.12);
       border: 1px solid rgba(248,113,113,0.3);
@@ -308,7 +249,6 @@
       margin-bottom: 16px;
       display: none;
     }
-
     .toast {
       position: fixed;
       bottom: 24px;
@@ -323,32 +263,28 @@
       transition: transform 0.3s ease;
       pointer-events: none;
     }
-
     .toast.show { transform: translateX(-50%) translateY(0); }
   </style>
 </head>
 <body>
   <div class="card">
-    <div class="pulse-icon">≡ƒôí</div>
+    <div class="pulse-icon" id="pulse-icon">&#x1F4E1;</div>
     <h1>Sharing Your Location</h1>
     <div id="status">Choose a spoof country or share your real location below.</div>
 
-    <!-- Sign out -->
     <div class="signout-bar">
       <button class="signout-btn-sm" onclick="signOut()">Sign out</button>
     </div>
 
-    <!-- Decoy country picker -->
     <div class="decoy-section">
       <div class="decoy-label">
-        <span>≡ƒÄ¡</span> Location Spoof ΓÇö viewers will see this country instead
+        <span>&#x1F3AD;</span> Location Spoof &mdash; viewers will see this country instead
       </div>
       <div class="decoy-row">
-        <!-- Custom searchable country picker -->
         <div class="country-picker" id="country-picker">
           <div class="country-input-wrap" id="picker-trigger">
-            <input type="text" id="country-search" placeholder="No spoof ΓÇö share real location" autocomplete="off" />
-            <span class="picker-arrow" id="picker-arrow">Γû╝</span>
+            <input type="text" id="country-search" placeholder="No spoof &mdash; share real location" autocomplete="off" />
+            <span class="picker-arrow" id="picker-arrow">&#x25BC;</span>
           </div>
           <div class="country-dropdown" id="country-dropdown"></div>
         </div>
@@ -363,11 +299,11 @@
 
     <div class="coords" id="coords">Waiting for GPS fix...</div>
 
-    <div class="stopped-banner" id="stopped-banner">≡ƒö┤ You have stopped sharing. Viewers have been notified.</div>
+    <div class="stopped-banner" id="stopped-banner">&#x1F534; You have stopped sharing. Viewers have been notified.</div>
 
     <div style="display:flex; gap:12px; justify-content:center; flex-wrap:wrap;">
       <button class="stop-btn" id="stop-btn" onclick="stopSharing()">Stop Sharing</button>
-      <button class="resume-btn" id="resume-btn" onclick="resumeSharing()">Γû╢ Resume Sharing</button>
+      <button class="resume-btn" id="resume-btn" onclick="resumeSharing()">&#x25B6; Resume Sharing</button>
     </div>
   </div>
 
@@ -375,231 +311,209 @@
 
   <script src="/socket.io/socket.io.js"></script>
   <script>
-    // ΓöÇΓöÇ Decoy anchor coordinates (city centres) ΓöÇΓöÇ
-    // The offset = decoy_anchor - real_anchor (computed once on first GPS fix).
-    // Every subsequent update adds the same offset, so relative movement stays real.
     const DECOY_ANCHORS = {
-      // Americas
-      US: { lat: 40.7128,   lng: -74.0060,  tz: 'America/New_York'       }, // New York
-      CA: { lat: 43.6510,   lng: -79.3470,  tz: 'America/Toronto'        }, // Toronto
-      MX: { lat: 19.4326,   lng: -99.1332,  tz: 'America/Mexico_City'    }, // Mexico City
-      BR: { lat: -23.5505,  lng: -46.6333,  tz: 'America/Sao_Paulo'      }, // S├úo Paulo
-      AR: { lat: -34.6037,  lng: -58.3816,  tz: 'America/Argentina/Buenos_Aires' }, // Buenos Aires
-      CO: { lat:  4.7110,   lng: -74.0721,  tz: 'America/Bogota'         }, // Bogot├í
-      CL: { lat: -33.4489,  lng: -70.6693,  tz: 'America/Santiago'       }, // Santiago
-      PE: { lat: -12.0464,  lng: -77.0428,  tz: 'America/Lima'           }, // Lima
-      VE: { lat: 10.4806,   lng: -66.9036,  tz: 'America/Caracas'        }, // Caracas
-      EC: { lat: -0.1807,   lng: -78.4678,  tz: 'America/Guayaquil'      }, // Quito
-      CU: { lat: 23.1136,   lng: -82.3666,  tz: 'America/Havana'         }, // Havana
-      PA: { lat:  8.9943,   lng: -79.5188,  tz: 'America/Panama'         }, // Panama City
-
-      // Europe
-      GB: { lat: 51.5074,   lng:  -0.1278,  tz: 'Europe/London'          }, // London
-      DE: { lat: 52.5200,   lng:  13.4050,  tz: 'Europe/Berlin'          }, // Berlin
-      FR: { lat: 48.8566,   lng:   2.3522,  tz: 'Europe/Paris'           }, // Paris
-      IT: { lat: 41.9028,   lng:  12.4964,  tz: 'Europe/Rome'            }, // Rome
-      ES: { lat: 40.4168,   lng:  -3.7038,  tz: 'Europe/Madrid'          }, // Madrid
-      PT: { lat: 38.7169,   lng:  -9.1399,  tz: 'Europe/Lisbon'          }, // Lisbon
-      NL: { lat: 52.3676,   lng:   4.9041,  tz: 'Europe/Amsterdam'       }, // Amsterdam
-      BE: { lat: 50.8503,   lng:   4.3517,  tz: 'Europe/Brussels'        }, // Brussels
-      CH: { lat: 47.3769,   lng:   8.5417,  tz: 'Europe/Zurich'          }, // Zurich
-      AT: { lat: 48.2082,   lng:  16.3738,  tz: 'Europe/Vienna'          }, // Vienna
-      SE: { lat: 59.3293,   lng:  18.0686,  tz: 'Europe/Stockholm'       }, // Stockholm
-      NO: { lat: 59.9139,   lng:  10.7522,  tz: 'Europe/Oslo'            }, // Oslo
-      DK: { lat: 55.6761,   lng:  12.5683,  tz: 'Europe/Copenhagen'      }, // Copenhagen
-      FI: { lat: 60.1699,   lng:  24.9384,  tz: 'Europe/Helsinki'        }, // Helsinki
-      PL: { lat: 52.2297,   lng:  21.0122,  tz: 'Europe/Warsaw'          }, // Warsaw
-      CZ: { lat: 50.0755,   lng:  14.4378,  tz: 'Europe/Prague'          }, // Prague
-      HU: { lat: 47.4979,   lng:  19.0402,  tz: 'Europe/Budapest'        }, // Budapest
-      RO: { lat: 44.4268,   lng:  26.1025,  tz: 'Europe/Bucharest'       }, // Bucharest
-      GR: { lat: 37.9838,   lng:  23.7275,  tz: 'Europe/Athens'          }, // Athens
-      UA: { lat: 50.4501,   lng:  30.5234,  tz: 'Europe/Kyiv'            }, // Kyiv
-      RU: { lat: 55.7558,   lng:  37.6173,  tz: 'Europe/Moscow'          }, // Moscow
-
-      // Africa
-      NG: { lat:  6.5244,   lng:   3.3792,  tz: 'Africa/Lagos'           }, // Lagos
-      ZA: { lat: -26.2041,  lng:  28.0473,  tz: 'Africa/Johannesburg'    }, // Johannesburg
-      EG: { lat: 30.0444,   lng:  31.2357,  tz: 'Africa/Cairo'           }, // Cairo
-      KE: { lat: -1.2921,   lng:  36.8219,  tz: 'Africa/Nairobi'         }, // Nairobi
-      GH: { lat:  5.6037,   lng:  -0.1870,  tz: 'Africa/Accra'           }, // Accra
-      ET: { lat:  9.0320,   lng:  38.7469,  tz: 'Africa/Addis_Ababa'     }, // Addis Ababa
-      TZ: { lat: -6.7924,   lng:  39.2083,  tz: 'Africa/Dar_es_Salaam'   }, // Dar es Salaam
-      SN: { lat: 14.7167,   lng: -17.4677,  tz: 'Africa/Dakar'           }, // Dakar
-      CI: { lat:  5.3484,   lng:  -4.0167,  tz: 'Africa/Abidjan'         }, // Abidjan
-      CM: { lat:  3.8667,   lng:  11.5167,  tz: 'Africa/Douala'          }, // Yaound├⌐
-      MZ: { lat: -25.9692,  lng:  32.5732,  tz: 'Africa/Maputo'          }, // Maputo
-      AO: { lat: -8.8368,   lng:  13.2343,  tz: 'Africa/Luanda'          }, // Luanda
-      MA: { lat: 33.9716,   lng:  -6.8498,  tz: 'Africa/Casablanca'      }, // Rabat
-      DZ: { lat: 36.7372,   lng:   3.0865,  tz: 'Africa/Algiers'         }, // Algiers
-      TN: { lat: 36.8190,   lng:  10.1658,  tz: 'Africa/Tunis'           }, // Tunis
-      LY: { lat: 32.9020,   lng:  13.1800,  tz: 'Africa/Tripoli'         }, // Tripoli
-      SD: { lat: 15.5518,   lng:  32.5324,  tz: 'Africa/Khartoum'        }, // Khartoum
-      UG: { lat:  0.3476,   lng:  32.5825,  tz: 'Africa/Kampala'         }, // Kampala
-
-      // Asia
-      CN: { lat: 39.9042,   lng: 116.4074,  tz: 'Asia/Shanghai'          }, // Beijing
-      JP: { lat: 35.6762,   lng: 139.6503,  tz: 'Asia/Tokyo'             }, // Tokyo
-      IN: { lat: 19.0760,   lng:  72.8777,  tz: 'Asia/Kolkata'           }, // Mumbai
-      KR: { lat: 37.5735,   lng: 126.9788,  tz: 'Asia/Seoul'             }, // Seoul
-      SG: { lat:  1.3521,   lng: 103.8198,  tz: 'Asia/Singapore'         }, // Singapore
-      ID: { lat: -6.2088,   lng: 106.8456,  tz: 'Asia/Jakarta'           }, // Jakarta
-      PH: { lat: 14.5995,   lng: 120.9842,  tz: 'Asia/Manila'            }, // Manila
-      TH: { lat: 13.7563,   lng: 100.5018,  tz: 'Asia/Bangkok'           }, // Bangkok
-      VN: { lat: 21.0285,   lng: 105.8542,  tz: 'Asia/Ho_Chi_Minh'       }, // Hanoi
-      MY: { lat:  3.1390,   lng: 101.6869,  tz: 'Asia/Kuala_Lumpur'      }, // Kuala Lumpur
-      PK: { lat: 33.6844,   lng:  73.0479,  tz: 'Asia/Karachi'           }, // Islamabad
-      BD: { lat: 23.8103,   lng:  90.4125,  tz: 'Asia/Dhaka'             }, // Dhaka
-      LK: { lat:  6.9271,   lng:  79.8612,  tz: 'Asia/Colombo'           }, // Colombo
-      NP: { lat: 27.7172,   lng:  85.3240,  tz: 'Asia/Kathmandu'         }, // Kathmandu
-      MM: { lat: 16.8409,   lng:  96.1735,  tz: 'Asia/Rangoon'           }, // Yangon
-      KH: { lat: 11.5564,   lng: 104.9282,  tz: 'Asia/Phnom_Penh'        }, // Phnom Penh
-      IQ: { lat: 33.3152,   lng:  44.3661,  tz: 'Asia/Baghdad'           }, // Baghdad
-      IR: { lat: 35.6892,   lng:  51.3890,  tz: 'Asia/Tehran'            }, // Tehran
-      SA: { lat: 24.7136,   lng:  46.6753,  tz: 'Asia/Riyadh'            }, // Riyadh
-      AE: { lat: 25.2048,   lng:  55.2708,  tz: 'Asia/Dubai'             }, // Dubai
-      TR: { lat: 39.9334,   lng:  32.8597,  tz: 'Europe/Istanbul'        }, // Ankara
-      IL: { lat: 31.7683,   lng:  35.2137,  tz: 'Asia/Jerusalem'         }, // Jerusalem
-      JO: { lat: 31.9454,   lng:  35.9284,  tz: 'Asia/Amman'             }, // Amman
-      KZ: { lat: 51.1801,   lng:  71.4460,  tz: 'Asia/Almaty'            }, // Astana
-      UZ: { lat: 41.2995,   lng:  69.2401,  tz: 'Asia/Tashkent'          }, // Tashkent
-      AF: { lat: 34.5553,   lng:  69.2075,  tz: 'Asia/Kabul'             }, // Kabul
-      TW: { lat: 25.0330,   lng: 121.5654,  tz: 'Asia/Taipei'            }, // Taipei
-      HK: { lat: 22.3193,   lng: 114.1694,  tz: 'Asia/Hong_Kong'         }, // Hong Kong
-
-      // Oceania
-      AU: { lat: -33.8688,  lng: 151.2093,  tz: 'Australia/Sydney'       }, // Sydney
-      NZ: { lat: -36.8485,  lng: 174.7633,  tz: 'Pacific/Auckland'       }, // Auckland
-      FJ: { lat: -18.1416,  lng: 178.4419,  tz: 'Pacific/Fiji'           }, // Suva
+      US: { lat: 40.7128,   lng: -74.0060,  tz: 'America/New_York'              },
+      CA: { lat: 43.6510,   lng: -79.3470,  tz: 'America/Toronto'               },
+      MX: { lat: 19.4326,   lng: -99.1332,  tz: 'America/Mexico_City'           },
+      BR: { lat: -23.5505,  lng: -46.6333,  tz: 'America/Sao_Paulo'             },
+      AR: { lat: -34.6037,  lng: -58.3816,  tz: 'America/Argentina/Buenos_Aires'},
+      CO: { lat:  4.7110,   lng: -74.0721,  tz: 'America/Bogota'                },
+      CL: { lat: -33.4489,  lng: -70.6693,  tz: 'America/Santiago'              },
+      PE: { lat: -12.0464,  lng: -77.0428,  tz: 'America/Lima'                  },
+      VE: { lat: 10.4806,   lng: -66.9036,  tz: 'America/Caracas'               },
+      EC: { lat: -0.1807,   lng: -78.4678,  tz: 'America/Guayaquil'             },
+      CU: { lat: 23.1136,   lng: -82.3666,  tz: 'America/Havana'                },
+      PA: { lat:  8.9943,   lng: -79.5188,  tz: 'America/Panama'                },
+      GB: { lat: 51.5074,   lng:  -0.1278,  tz: 'Europe/London'                 },
+      DE: { lat: 52.5200,   lng:  13.4050,  tz: 'Europe/Berlin'                 },
+      FR: { lat: 48.8566,   lng:   2.3522,  tz: 'Europe/Paris'                  },
+      IT: { lat: 41.9028,   lng:  12.4964,  tz: 'Europe/Rome'                   },
+      ES: { lat: 40.4168,   lng:  -3.7038,  tz: 'Europe/Madrid'                 },
+      PT: { lat: 38.7169,   lng:  -9.1399,  tz: 'Europe/Lisbon'                 },
+      NL: { lat: 52.3676,   lng:   4.9041,  tz: 'Europe/Amsterdam'              },
+      BE: { lat: 50.8503,   lng:   4.3517,  tz: 'Europe/Brussels'               },
+      CH: { lat: 47.3769,   lng:   8.5417,  tz: 'Europe/Zurich'                 },
+      AT: { lat: 48.2082,   lng:  16.3738,  tz: 'Europe/Vienna'                 },
+      SE: { lat: 59.3293,   lng:  18.0686,  tz: 'Europe/Stockholm'              },
+      NO: { lat: 59.9139,   lng:  10.7522,  tz: 'Europe/Oslo'                   },
+      DK: { lat: 55.6761,   lng:  12.5683,  tz: 'Europe/Copenhagen'             },
+      FI: { lat: 60.1699,   lng:  24.9384,  tz: 'Europe/Helsinki'               },
+      PL: { lat: 52.2297,   lng:  21.0122,  tz: 'Europe/Warsaw'                 },
+      CZ: { lat: 50.0755,   lng:  14.4378,  tz: 'Europe/Prague'                 },
+      HU: { lat: 47.4979,   lng:  19.0402,  tz: 'Europe/Budapest'               },
+      RO: { lat: 44.4268,   lng:  26.1025,  tz: 'Europe/Bucharest'              },
+      GR: { lat: 37.9838,   lng:  23.7275,  tz: 'Europe/Athens'                 },
+      UA: { lat: 50.4501,   lng:  30.5234,  tz: 'Europe/Kyiv'                   },
+      RU: { lat: 55.7558,   lng:  37.6173,  tz: 'Europe/Moscow'                 },
+      NG: { lat:  6.5244,   lng:   3.3792,  tz: 'Africa/Lagos'                  },
+      ZA: { lat: -26.2041,  lng:  28.0473,  tz: 'Africa/Johannesburg'           },
+      EG: { lat: 30.0444,   lng:  31.2357,  tz: 'Africa/Cairo'                  },
+      KE: { lat: -1.2921,   lng:  36.8219,  tz: 'Africa/Nairobi'                },
+      GH: { lat:  5.6037,   lng:  -0.1870,  tz: 'Africa/Accra'                  },
+      ET: { lat:  9.0320,   lng:  38.7469,  tz: 'Africa/Addis_Ababa'            },
+      TZ: { lat: -6.7924,   lng:  39.2083,  tz: 'Africa/Dar_es_Salaam'          },
+      SN: { lat: 14.7167,   lng: -17.4677,  tz: 'Africa/Dakar'                  },
+      CI: { lat:  5.3484,   lng:  -4.0167,  tz: 'Africa/Abidjan'                },
+      CM: { lat:  3.8667,   lng:  11.5167,  tz: 'Africa/Douala'                 },
+      MZ: { lat: -25.9692,  lng:  32.5732,  tz: 'Africa/Maputo'                 },
+      AO: { lat: -8.8368,   lng:  13.2343,  tz: 'Africa/Luanda'                 },
+      MA: { lat: 33.9716,   lng:  -6.8498,  tz: 'Africa/Casablanca'             },
+      DZ: { lat: 36.7372,   lng:   3.0865,  tz: 'Africa/Algiers'                },
+      TN: { lat: 36.8190,   lng:  10.1658,  tz: 'Africa/Tunis'                  },
+      LY: { lat: 32.9020,   lng:  13.1800,  tz: 'Africa/Tripoli'                },
+      SD: { lat: 15.5518,   lng:  32.5324,  tz: 'Africa/Khartoum'               },
+      UG: { lat:  0.3476,   lng:  32.5825,  tz: 'Africa/Kampala'                },
+      CN: { lat: 39.9042,   lng: 116.4074,  tz: 'Asia/Shanghai'                 },
+      JP: { lat: 35.6762,   lng: 139.6503,  tz: 'Asia/Tokyo'                    },
+      IN: { lat: 19.0760,   lng:  72.8777,  tz: 'Asia/Kolkata'                  },
+      KR: { lat: 37.5735,   lng: 126.9788,  tz: 'Asia/Seoul'                    },
+      SG: { lat:  1.3521,   lng: 103.8198,  tz: 'Asia/Singapore'                },
+      ID: { lat: -6.2088,   lng: 106.8456,  tz: 'Asia/Jakarta'                  },
+      PH: { lat: 14.5995,   lng: 120.9842,  tz: 'Asia/Manila'                   },
+      TH: { lat: 13.7563,   lng: 100.5018,  tz: 'Asia/Bangkok'                  },
+      VN: { lat: 21.0285,   lng: 105.8542,  tz: 'Asia/Ho_Chi_Minh'              },
+      MY: { lat:  3.1390,   lng: 101.6869,  tz: 'Asia/Kuala_Lumpur'             },
+      PK: { lat: 33.6844,   lng:  73.0479,  tz: 'Asia/Karachi'                  },
+      BD: { lat: 23.8103,   lng:  90.4125,  tz: 'Asia/Dhaka'                    },
+      LK: { lat:  6.9271,   lng:  79.8612,  tz: 'Asia/Colombo'                  },
+      NP: { lat: 27.7172,   lng:  85.3240,  tz: 'Asia/Kathmandu'                },
+      MM: { lat: 16.8409,   lng:  96.1735,  tz: 'Asia/Rangoon'                  },
+      KH: { lat: 11.5564,   lng: 104.9282,  tz: 'Asia/Phnom_Penh'               },
+      IQ: { lat: 33.3152,   lng:  44.3661,  tz: 'Asia/Baghdad'                  },
+      IR: { lat: 35.6892,   lng:  51.3890,  tz: 'Asia/Tehran'                   },
+      SA: { lat: 24.7136,   lng:  46.6753,  tz: 'Asia/Riyadh'                   },
+      AE: { lat: 25.2048,   lng:  55.2708,  tz: 'Asia/Dubai'                    },
+      TR: { lat: 39.9334,   lng:  32.8597,  tz: 'Europe/Istanbul'               },
+      IL: { lat: 31.7683,   lng:  35.2137,  tz: 'Asia/Jerusalem'                },
+      JO: { lat: 31.9454,   lng:  35.9284,  tz: 'Asia/Amman'                    },
+      KZ: { lat: 51.1801,   lng:  71.4460,  tz: 'Asia/Almaty'                   },
+      UZ: { lat: 41.2995,   lng:  69.2401,  tz: 'Asia/Tashkent'                 },
+      AF: { lat: 34.5553,   lng:  69.2075,  tz: 'Asia/Kabul'                    },
+      TW: { lat: 25.0330,   lng: 121.5654,  tz: 'Asia/Taipei'                   },
+      HK: { lat: 22.3193,   lng: 114.1694,  tz: 'Asia/Hong_Kong'                },
+      AU: { lat: -33.8688,  lng: 151.2093,  tz: 'Australia/Sydney'              },
+      NZ: { lat: -36.8485,  lng: 174.7633,  tz: 'Pacific/Auckland'              },
+      FJ: { lat: -18.1416,  lng: 178.4419,  tz: 'Pacific/Fiji'                  },
     };
 
-    // ΓöÇΓöÇ Session setup ΓöÇΓöÇ
+    const COUNTRY_LIST = [
+      { value: 'none', label: 'No spoof \u2014 share real location', group: '' },
+      { value: 'US', label: '\uD83C\uDDFA\uD83C\uDDF8 United States (New York)',    group: '\uD83C\uDF0E Americas' },
+      { value: 'CA', label: '\uD83C\uDDE8\uD83C\uDDE6 Canada (Toronto)',            group: '\uD83C\uDF0E Americas' },
+      { value: 'MX', label: '\uD83C\uDDF2\uD83C\uDDFD Mexico (Mexico City)',        group: '\uD83C\uDF0E Americas' },
+      { value: 'BR', label: '\uD83C\uDDE7\uD83C\uDDF7 Brazil (Sao Paulo)',          group: '\uD83C\uDF0E Americas' },
+      { value: 'AR', label: '\uD83C\uDDE6\uD83C\uDDF7 Argentina (Buenos Aires)',    group: '\uD83C\uDF0E Americas' },
+      { value: 'CO', label: '\uD83C\uDDE8\uD83C\uDDF4 Colombia (Bogota)',           group: '\uD83C\uDF0E Americas' },
+      { value: 'CL', label: '\uD83C\uDDE8\uD83C\uDDF1 Chile (Santiago)',            group: '\uD83C\uDF0E Americas' },
+      { value: 'PE', label: '\uD83C\uDDF5\uD83C\uDDEA Peru (Lima)',                 group: '\uD83C\uDF0E Americas' },
+      { value: 'VE', label: '\uD83C\uDDFB\uD83C\uDDEA Venezuela (Caracas)',         group: '\uD83C\uDF0E Americas' },
+      { value: 'EC', label: '\uD83C\uDDEA\uD83C\uDDE8 Ecuador (Quito)',             group: '\uD83C\uDF0E Americas' },
+      { value: 'CU', label: '\uD83C\uDDE8\uD83C\uDDFA Cuba (Havana)',               group: '\uD83C\uDF0E Americas' },
+      { value: 'PA', label: '\uD83C\uDDF5\uD83C\uDDE6 Panama (Panama City)',        group: '\uD83C\uDF0E Americas' },
+      { value: 'GB', label: '\uD83C\uDDEC\uD83C\uDDE7 United Kingdom (London)',     group: '\uD83C\uDF0D Europe' },
+      { value: 'DE', label: '\uD83C\uDDE9\uD83C\uDDEA Germany (Berlin)',            group: '\uD83C\uDF0D Europe' },
+      { value: 'FR', label: '\uD83C\uDDEB\uD83C\uDDF7 France (Paris)',              group: '\uD83C\uDF0D Europe' },
+      { value: 'IT', label: '\uD83C\uDDEE\uD83C\uDDF9 Italy (Rome)',                group: '\uD83C\uDF0D Europe' },
+      { value: 'ES', label: '\uD83C\uDDEA\uD83C\uDDF8 Spain (Madrid)',              group: '\uD83C\uDF0D Europe' },
+      { value: 'PT', label: '\uD83C\uDDF5\uD83C\uDDF9 Portugal (Lisbon)',           group: '\uD83C\uDF0D Europe' },
+      { value: 'NL', label: '\uD83C\uDDF3\uD83C\uDDF1 Netherlands (Amsterdam)',     group: '\uD83C\uDF0D Europe' },
+      { value: 'BE', label: '\uD83C\uDDE7\uD83C\uDDEA Belgium (Brussels)',          group: '\uD83C\uDF0D Europe' },
+      { value: 'CH', label: '\uD83C\uDDE8\uD83C\uDDED Switzerland (Zurich)',        group: '\uD83C\uDF0D Europe' },
+      { value: 'AT', label: '\uD83C\uDDE6\uD83C\uDDF9 Austria (Vienna)',            group: '\uD83C\uDF0D Europe' },
+      { value: 'SE', label: '\uD83C\uDDF8\uD83C\uDDEA Sweden (Stockholm)',          group: '\uD83C\uDF0D Europe' },
+      { value: 'NO', label: '\uD83C\uDDF3\uD83C\uDDF4 Norway (Oslo)',               group: '\uD83C\uDF0D Europe' },
+      { value: 'DK', label: '\uD83C\uDDE9\uD83C\uDDF0 Denmark (Copenhagen)',        group: '\uD83C\uDF0D Europe' },
+      { value: 'FI', label: '\uD83C\uDDEB\uD83C\uDDEE Finland (Helsinki)',          group: '\uD83C\uDF0D Europe' },
+      { value: 'PL', label: '\uD83C\uDDF5\uD83C\uDDF1 Poland (Warsaw)',             group: '\uD83C\uDF0D Europe' },
+      { value: 'CZ', label: '\uD83C\uDDE8\uD83C\uDDFF Czech Republic (Prague)',     group: '\uD83C\uDF0D Europe' },
+      { value: 'HU', label: '\uD83C\uDDED\uD83C\uDDFA Hungary (Budapest)',          group: '\uD83C\uDF0D Europe' },
+      { value: 'RO', label: '\uD83C\uDDF7\uD83C\uDDF4 Romania (Bucharest)',         group: '\uD83C\uDF0D Europe' },
+      { value: 'GR', label: '\uD83C\uDDEC\uD83C\uDDF7 Greece (Athens)',             group: '\uD83C\uDF0D Europe' },
+      { value: 'UA', label: '\uD83C\uDDFA\uD83C\uDDE6 Ukraine (Kyiv)',              group: '\uD83C\uDF0D Europe' },
+      { value: 'RU', label: '\uD83C\uDDF7\uD83C\uDDFA Russia (Moscow)',             group: '\uD83C\uDF0D Europe' },
+      { value: 'NG', label: '\uD83C\uDDF3\uD83C\uDDEC Nigeria (Lagos)',             group: '\uD83C\uDF0D Africa' },
+      { value: 'ZA', label: '\uD83C\uDDFF\uD83C\uDDE6 South Africa (Johannesburg)', group: '\uD83C\uDF0D Africa' },
+      { value: 'EG', label: '\uD83C\uDDEA\uD83C\uDDEC Egypt (Cairo)',               group: '\uD83C\uDF0D Africa' },
+      { value: 'KE', label: '\uD83C\uDDF0\uD83C\uDDEA Kenya (Nairobi)',             group: '\uD83C\uDF0D Africa' },
+      { value: 'GH', label: '\uD83C\uDDEC\uD83C\uDDED Ghana (Accra)',               group: '\uD83C\uDF0D Africa' },
+      { value: 'ET', label: '\uD83C\uDDEA\uD83C\uDDF9 Ethiopia (Addis Ababa)',      group: '\uD83C\uDF0D Africa' },
+      { value: 'TZ', label: '\uD83C\uDDF9\uD83C\uDDFF Tanzania (Dar es Salaam)',    group: '\uD83C\uDF0D Africa' },
+      { value: 'SN', label: '\uD83C\uDDF8\uD83C\uDDF3 Senegal (Dakar)',             group: '\uD83C\uDF0D Africa' },
+      { value: 'CI', label: '\uD83C\uDDE8\uD83C\uDDEE Ivory Coast (Abidjan)',       group: '\uD83C\uDF0D Africa' },
+      { value: 'CM', label: '\uD83C\uDDE8\uD83C\uDDF2 Cameroon (Yaounde)',          group: '\uD83C\uDF0D Africa' },
+      { value: 'MZ', label: '\uD83C\uDDF2\uD83C\uDDFF Mozambique (Maputo)',         group: '\uD83C\uDF0D Africa' },
+      { value: 'AO', label: '\uD83C\uDDE6\uD83C\uDDF4 Angola (Luanda)',             group: '\uD83C\uDF0D Africa' },
+      { value: 'MA', label: '\uD83C\uDDF2\uD83C\uDDE6 Morocco (Rabat)',             group: '\uD83C\uDF0D Africa' },
+      { value: 'DZ', label: '\uD83C\uDDE9\uD83C\uDDFF Algeria (Algiers)',           group: '\uD83C\uDF0D Africa' },
+      { value: 'TN', label: '\uD83C\uDDF9\uD83C\uDDF3 Tunisia (Tunis)',             group: '\uD83C\uDF0D Africa' },
+      { value: 'LY', label: '\uD83C\uDDF1\uD83C\uDDFE Libya (Tripoli)',             group: '\uD83C\uDF0D Africa' },
+      { value: 'SD', label: '\uD83C\uDDF8\uD83C\uDDE9 Sudan (Khartoum)',            group: '\uD83C\uDF0D Africa' },
+      { value: 'UG', label: '\uD83C\uDDFA\uD83C\uDDEC Uganda (Kampala)',            group: '\uD83C\uDF0D Africa' },
+      { value: 'CN', label: '\uD83C\uDDE8\uD83C\uDDF3 China (Beijing)',             group: '\uD83C\uDF0F Asia' },
+      { value: 'JP', label: '\uD83C\uDDEF\uD83C\uDDF5 Japan (Tokyo)',               group: '\uD83C\uDF0F Asia' },
+      { value: 'IN', label: '\uD83C\uDDEE\uD83C\uDDF3 India (Mumbai)',              group: '\uD83C\uDF0F Asia' },
+      { value: 'KR', label: '\uD83C\uDDF0\uD83C\uDDF7 South Korea (Seoul)',         group: '\uD83C\uDF0F Asia' },
+      { value: 'SG', label: '\uD83C\uDDF8\uD83C\uDDEC Singapore',                  group: '\uD83C\uDF0F Asia' },
+      { value: 'ID', label: '\uD83C\uDDEE\uD83C\uDDE9 Indonesia (Jakarta)',         group: '\uD83C\uDF0F Asia' },
+      { value: 'PH', label: '\uD83C\uDDF5\uD83C\uDDED Philippines (Manila)',        group: '\uD83C\uDF0F Asia' },
+      { value: 'TH', label: '\uD83C\uDDF9\uD83C\uDDED Thailand (Bangkok)',          group: '\uD83C\uDF0F Asia' },
+      { value: 'VN', label: '\uD83C\uDDFB\uD83C\uDDF3 Vietnam (Hanoi)',             group: '\uD83C\uDF0F Asia' },
+      { value: 'MY', label: '\uD83C\uDDF2\uD83C\uDDFE Malaysia (Kuala Lumpur)',     group: '\uD83C\uDF0F Asia' },
+      { value: 'PK', label: '\uD83C\uDDF5\uD83C\uDDF0 Pakistan (Islamabad)',        group: '\uD83C\uDF0F Asia' },
+      { value: 'BD', label: '\uD83C\uDDE7\uD83C\uDDE9 Bangladesh (Dhaka)',          group: '\uD83C\uDF0F Asia' },
+      { value: 'LK', label: '\uD83C\uDDF1\uD83C\uDDF0 Sri Lanka (Colombo)',         group: '\uD83C\uDF0F Asia' },
+      { value: 'NP', label: '\uD83C\uDDF3\uD83C\uDDF5 Nepal (Kathmandu)',           group: '\uD83C\uDF0F Asia' },
+      { value: 'MM', label: '\uD83C\uDDF2\uD83C\uDDF2 Myanmar (Yangon)',            group: '\uD83C\uDF0F Asia' },
+      { value: 'KH', label: '\uD83C\uDDF0\uD83C\uDDED Cambodia (Phnom Penh)',       group: '\uD83C\uDF0F Asia' },
+      { value: 'IQ', label: '\uD83C\uDDEE\uD83C\uDDF6 Iraq (Baghdad)',              group: '\uD83C\uDF0F Asia' },
+      { value: 'IR', label: '\uD83C\uDDEE\uD83C\uDDF7 Iran (Tehran)',               group: '\uD83C\uDF0F Asia' },
+      { value: 'SA', label: '\uD83C\uDDF8\uD83C\uDDE6 Saudi Arabia (Riyadh)',       group: '\uD83C\uDF0F Asia' },
+      { value: 'AE', label: '\uD83C\uDDE6\uD83C\uDDEA UAE (Dubai)',                 group: '\uD83C\uDF0F Asia' },
+      { value: 'TR', label: '\uD83C\uDDF9\uD83C\uDDF7 Turkey (Ankara)',             group: '\uD83C\uDF0F Asia' },
+      { value: 'IL', label: '\uD83C\uDDEE\uD83C\uDDF1 Israel (Jerusalem)',          group: '\uD83C\uDF0F Asia' },
+      { value: 'JO', label: '\uD83C\uDDEF\uD83C\uDDF4 Jordan (Amman)',              group: '\uD83C\uDF0F Asia' },
+      { value: 'KZ', label: '\uD83C\uDDF0\uD83C\uDDFF Kazakhstan (Astana)',         group: '\uD83C\uDF0F Asia' },
+      { value: 'UZ', label: '\uD83C\uDDFA\uD83C\uDDFF Uzbekistan (Tashkent)',       group: '\uD83C\uDF0F Asia' },
+      { value: 'AF', label: '\uD83C\uDDE6\uD83C\uDDEB Afghanistan (Kabul)',         group: '\uD83C\uDF0F Asia' },
+      { value: 'TW', label: '\uD83C\uDDF9\uD83C\uDDFC Taiwan (Taipei)',             group: '\uD83C\uDF0F Asia' },
+      { value: 'HK', label: '\uD83C\uDDED\uD83C\uDDF0 Hong Kong',                  group: '\uD83C\uDF0F Asia' },
+      { value: 'AU', label: '\uD83C\uDDE6\uD83C\uDDFA Australia (Sydney)',          group: '\uD83C\uDF0F Oceania' },
+      { value: 'NZ', label: '\uD83C\uDDF3\uD83C\uDDFF New Zealand (Auckland)',      group: '\uD83C\uDF0F Oceania' },
+      { value: 'FJ', label: '\uD83C\uDDEB\uD83C\uDDEF Fiji (Suva)',                 group: '\uD83C\uDF0F Oceania' },
+    ];
+
     const params    = new URLSearchParams(window.location.search);
     const sessionId = params.get('id');
     if (!sessionId) window.location.href = '/';
 
-    const viewerUrl = `${window.location.origin}/view.html?id=${sessionId}`;
+    const viewerUrl = window.location.origin + '/view.html?id=' + sessionId;
     document.getElementById('share-link').value = viewerUrl;
 
     const socket = io({ transports: ['websocket'] });
     socket.emit('join-share', sessionId);
 
-    const statusEl  = document.getElementById('status');
-    const coordsEl  = document.getElementById('coords');
-    const badgeEl   = document.getElementById('spoof-badge');
+    const statusEl      = document.getElementById('status');
+    const coordsEl      = document.getElementById('coords');
+    const badgeEl       = document.getElementById('spoof-badge');
     const stopBtn       = document.getElementById('stop-btn');
     const resumeBtn     = document.getElementById('resume-btn');
     const stoppedBanner = document.getElementById('stopped-banner');
+    const pulseIcon     = document.getElementById('pulse-icon');
 
-    // ΓöÇΓöÇ Searchable country picker data ΓöÇΓöÇ
-    const COUNTRY_LIST = [
-      { value: 'none', label: 'No spoof ΓÇö share real location', group: '' },
-      // Americas
-      { value: 'US', label: '≡ƒç║≡ƒç╕ United States (New York)',    group: '≡ƒîÄ Americas' },
-      { value: 'CA', label: '≡ƒç¿≡ƒçª Canada (Toronto)',            group: '≡ƒîÄ Americas' },
-      { value: 'MX', label: '≡ƒç▓≡ƒç╜ Mexico (Mexico City)',        group: '≡ƒîÄ Americas' },
-      { value: 'BR', label: '≡ƒçº≡ƒç╖ Brazil (S├úo Paulo)',          group: '≡ƒîÄ Americas' },
-      { value: 'AR', label: '≡ƒçª≡ƒç╖ Argentina (Buenos Aires)',    group: '≡ƒîÄ Americas' },
-      { value: 'CO', label: '≡ƒç¿≡ƒç┤ Colombia (Bogot├í)',           group: '≡ƒîÄ Americas' },
-      { value: 'CL', label: '≡ƒç¿≡ƒç▒ Chile (Santiago)',            group: '≡ƒîÄ Americas' },
-      { value: 'PE', label: '≡ƒç╡≡ƒç¬ Peru (Lima)',                 group: '≡ƒîÄ Americas' },
-      { value: 'VE', label: '≡ƒç╗≡ƒç¬ Venezuela (Caracas)',         group: '≡ƒîÄ Americas' },
-      { value: 'EC', label: '≡ƒç¬≡ƒç¿ Ecuador (Quito)',             group: '≡ƒîÄ Americas' },
-      { value: 'CU', label: '≡ƒç¿≡ƒç║ Cuba (Havana)',               group: '≡ƒîÄ Americas' },
-      { value: 'PA', label: '≡ƒç╡≡ƒçª Panama (Panama City)',        group: '≡ƒîÄ Americas' },
-      // Europe
-      { value: 'GB', label: '≡ƒç¼≡ƒçº United Kingdom (London)',     group: '≡ƒîì Europe' },
-      { value: 'DE', label: '≡ƒç⌐≡ƒç¬ Germany (Berlin)',            group: '≡ƒîì Europe' },
-      { value: 'FR', label: '≡ƒç½≡ƒç╖ France (Paris)',              group: '≡ƒîì Europe' },
-      { value: 'IT', label: '≡ƒç«≡ƒç╣ Italy (Rome)',                group: '≡ƒîì Europe' },
-      { value: 'ES', label: '≡ƒç¬≡ƒç╕ Spain (Madrid)',              group: '≡ƒîì Europe' },
-      { value: 'PT', label: '≡ƒç╡≡ƒç╣ Portugal (Lisbon)',           group: '≡ƒîì Europe' },
-      { value: 'NL', label: '≡ƒç│≡ƒç▒ Netherlands (Amsterdam)',     group: '≡ƒîì Europe' },
-      { value: 'BE', label: '≡ƒçº≡ƒç¬ Belgium (Brussels)',          group: '≡ƒîì Europe' },
-      { value: 'CH', label: '≡ƒç¿≡ƒç¡ Switzerland (Zurich)',        group: '≡ƒîì Europe' },
-      { value: 'AT', label: '≡ƒçª≡ƒç╣ Austria (Vienna)',            group: '≡ƒîì Europe' },
-      { value: 'SE', label: '≡ƒç╕≡ƒç¬ Sweden (Stockholm)',          group: '≡ƒîì Europe' },
-      { value: 'NO', label: '≡ƒç│≡ƒç┤ Norway (Oslo)',               group: '≡ƒîì Europe' },
-      { value: 'DK', label: '≡ƒç⌐≡ƒç░ Denmark (Copenhagen)',        group: '≡ƒîì Europe' },
-      { value: 'FI', label: '≡ƒç½≡ƒç« Finland (Helsinki)',          group: '≡ƒîì Europe' },
-      { value: 'PL', label: '≡ƒç╡≡ƒç▒ Poland (Warsaw)',             group: '≡ƒîì Europe' },
-      { value: 'CZ', label: '≡ƒç¿≡ƒç┐ Czech Republic (Prague)',     group: '≡ƒîì Europe' },
-      { value: 'HU', label: '≡ƒç¡≡ƒç║ Hungary (Budapest)',          group: '≡ƒîì Europe' },
-      { value: 'RO', label: '≡ƒç╖≡ƒç┤ Romania (Bucharest)',         group: '≡ƒîì Europe' },
-      { value: 'GR', label: '≡ƒç¼≡ƒç╖ Greece (Athens)',             group: '≡ƒîì Europe' },
-      { value: 'UA', label: '≡ƒç║≡ƒçª Ukraine (Kyiv)',              group: '≡ƒîì Europe' },
-      { value: 'RU', label: '≡ƒç╖≡ƒç║ Russia (Moscow)',             group: '≡ƒîì Europe' },
-      // Africa
-      { value: 'NG', label: '≡ƒç│≡ƒç¼ Nigeria (Lagos)',             group: '≡ƒîì Africa' },
-      { value: 'ZA', label: '≡ƒç┐≡ƒçª South Africa (Johannesburg)', group: '≡ƒîì Africa' },
-      { value: 'EG', label: '≡ƒç¬≡ƒç¼ Egypt (Cairo)',               group: '≡ƒîì Africa' },
-      { value: 'KE', label: '≡ƒç░≡ƒç¬ Kenya (Nairobi)',             group: '≡ƒîì Africa' },
-      { value: 'GH', label: '≡ƒç¼≡ƒç¡ Ghana (Accra)',               group: '≡ƒîì Africa' },
-      { value: 'ET', label: '≡ƒç¬≡ƒç╣ Ethiopia (Addis Ababa)',      group: '≡ƒîì Africa' },
-      { value: 'TZ', label: '≡ƒç╣≡ƒç┐ Tanzania (Dar es Salaam)',    group: '≡ƒîì Africa' },
-      { value: 'SN', label: '≡ƒç╕≡ƒç│ Senegal (Dakar)',             group: '≡ƒîì Africa' },
-      { value: 'CI', label: '≡ƒç¿≡ƒç« Ivory Coast (Abidjan)',       group: '≡ƒîì Africa' },
-      { value: 'CM', label: '≡ƒç¿≡ƒç▓ Cameroon (Yaound├⌐)',          group: '≡ƒîì Africa' },
-      { value: 'MZ', label: '≡ƒç▓≡ƒç┐ Mozambique (Maputo)',         group: '≡ƒîì Africa' },
-      { value: 'AO', label: '≡ƒçª≡ƒç┤ Angola (Luanda)',             group: '≡ƒîì Africa' },
-      { value: 'MA', label: '≡ƒç▓≡ƒçª Morocco (Rabat)',             group: '≡ƒîì Africa' },
-      { value: 'DZ', label: '≡ƒç⌐≡ƒç┐ Algeria (Algiers)',           group: '≡ƒîì Africa' },
-      { value: 'TN', label: '≡ƒç╣≡ƒç│ Tunisia (Tunis)',             group: '≡ƒîì Africa' },
-      { value: 'LY', label: '≡ƒç▒≡ƒç╛ Libya (Tripoli)',             group: '≡ƒîì Africa' },
-      { value: 'SD', label: '≡ƒç╕≡ƒç⌐ Sudan (Khartoum)',            group: '≡ƒîì Africa' },
-      { value: 'UG', label: '≡ƒç║≡ƒç¼ Uganda (Kampala)',            group: '≡ƒîì Africa' },
-      // Asia
-      { value: 'CN', label: '≡ƒç¿≡ƒç│ China (Beijing)',             group: '≡ƒîÅ Asia' },
-      { value: 'JP', label: '≡ƒç»≡ƒç╡ Japan (Tokyo)',               group: '≡ƒîÅ Asia' },
-      { value: 'IN', label: '≡ƒç«≡ƒç│ India (Mumbai)',              group: '≡ƒîÅ Asia' },
-      { value: 'KR', label: '≡ƒç░≡ƒç╖ South Korea (Seoul)',         group: '≡ƒîÅ Asia' },
-      { value: 'SG', label: '≡ƒç╕≡ƒç¼ Singapore',                  group: '≡ƒîÅ Asia' },
-      { value: 'ID', label: '≡ƒç«≡ƒç⌐ Indonesia (Jakarta)',         group: '≡ƒîÅ Asia' },
-      { value: 'PH', label: '≡ƒç╡≡ƒç¡ Philippines (Manila)',        group: '≡ƒîÅ Asia' },
-      { value: 'TH', label: '≡ƒç╣≡ƒç¡ Thailand (Bangkok)',          group: '≡ƒîÅ Asia' },
-      { value: 'VN', label: '≡ƒç╗≡ƒç│ Vietnam (Hanoi)',             group: '≡ƒîÅ Asia' },
-      { value: 'MY', label: '≡ƒç▓≡ƒç╛ Malaysia (Kuala Lumpur)',     group: '≡ƒîÅ Asia' },
-      { value: 'PK', label: '≡ƒç╡≡ƒç░ Pakistan (Islamabad)',        group: '≡ƒîÅ Asia' },
-      { value: 'BD', label: '≡ƒçº≡ƒç⌐ Bangladesh (Dhaka)',          group: '≡ƒîÅ Asia' },
-      { value: 'LK', label: '≡ƒç▒≡ƒç░ Sri Lanka (Colombo)',         group: '≡ƒîÅ Asia' },
-      { value: 'NP', label: '≡ƒç│≡ƒç╡ Nepal (Kathmandu)',           group: '≡ƒîÅ Asia' },
-      { value: 'MM', label: '≡ƒç▓≡ƒç▓ Myanmar (Yangon)',            group: '≡ƒîÅ Asia' },
-      { value: 'KH', label: '≡ƒç░≡ƒç¡ Cambodia (Phnom Penh)',       group: '≡ƒîÅ Asia' },
-      { value: 'IQ', label: '≡ƒç«≡ƒç╢ Iraq (Baghdad)',              group: '≡ƒîÅ Asia' },
-      { value: 'IR', label: '≡ƒç«≡ƒç╖ Iran (Tehran)',               group: '≡ƒîÅ Asia' },
-      { value: 'SA', label: '≡ƒç╕≡ƒçª Saudi Arabia (Riyadh)',       group: '≡ƒîÅ Asia' },
-      { value: 'AE', label: '≡ƒçª≡ƒç¬ UAE (Dubai)',                 group: '≡ƒîÅ Asia' },
-      { value: 'TR', label: '≡ƒç╣≡ƒç╖ Turkey (Ankara)',             group: '≡ƒîÅ Asia' },
-      { value: 'IL', label: '≡ƒç«≡ƒç▒ Israel (Jerusalem)',          group: '≡ƒîÅ Asia' },
-      { value: 'JO', label: '≡ƒç»≡ƒç┤ Jordan (Amman)',              group: '≡ƒîÅ Asia' },
-      { value: 'KZ', label: '≡ƒç░≡ƒç┐ Kazakhstan (Astana)',         group: '≡ƒîÅ Asia' },
-      { value: 'UZ', label: '≡ƒç║≡ƒç┐ Uzbekistan (Tashkent)',       group: '≡ƒîÅ Asia' },
-      { value: 'AF', label: '≡ƒçª≡ƒç½ Afghanistan (Kabul)',         group: '≡ƒîÅ Asia' },
-      { value: 'TW', label: '≡ƒç╣≡ƒç╝ Taiwan (Taipei)',             group: '≡ƒîÅ Asia' },
-      { value: 'HK', label: '≡ƒç¡≡ƒç░ Hong Kong',                  group: '≡ƒîÅ Asia' },
-      // Oceania
-      { value: 'AU', label: '≡ƒçª≡ƒç║ Australia (Sydney)',          group: '≡ƒîÅ Oceania' },
-      { value: 'NZ', label: '≡ƒç│≡ƒç┐ New Zealand (Auckland)',      group: '≡ƒîÅ Oceania' },
-      { value: 'FJ', label: '≡ƒç½≡ƒç» Fiji (Suva)',                 group: '≡ƒîÅ Oceania' },
-    ];
-
-    // ΓöÇΓöÇ Picker state ΓöÇΓöÇ
     let selectedValue = 'none';
-    let selectedLabel = 'No spoof ΓÇö share real location';
+    let selectedLabel = 'No spoof \u2014 share real location';
 
-    const searchInput  = document.getElementById('country-search');
-    const dropdown     = document.getElementById('country-dropdown');
-    const pickerArrow  = document.getElementById('picker-arrow');
+    const searchInput   = document.getElementById('country-search');
+    const dropdown      = document.getElementById('country-dropdown');
+    const pickerArrow   = document.getElementById('picker-arrow');
     const pickerTrigger = document.getElementById('picker-trigger');
 
     function renderDropdown(query) {
       const q = query.toLowerCase().trim();
       dropdown.innerHTML = '';
-      let lastGroup = null;
-      let count = 0;
-
-      COUNTRY_LIST.forEach(item => {
+      let lastGroup = null, count = 0;
+      COUNTRY_LIST.forEach(function(item) {
         if (!item.label.toLowerCase().includes(q)) return;
-        // Group header (skip for top-level "none" and when searching)
         if (item.group && item.group !== lastGroup && !q) {
           const hdr = document.createElement('div');
           hdr.className = 'dd-group-label';
@@ -611,14 +525,13 @@
         opt.className = 'dd-option' + (item.value === selectedValue ? ' selected' : '');
         opt.textContent = item.label;
         opt.dataset.value = item.value;
-        opt.addEventListener('mousedown', (e) => {
+        opt.addEventListener('mousedown', function(e) {
           e.preventDefault();
           selectCountry(item.value, item.label);
         });
         dropdown.appendChild(opt);
         count++;
       });
-
       if (count === 0) {
         const none = document.createElement('div');
         none.className = 'dd-option no-results';
@@ -637,152 +550,95 @@
     function closeDropdown() {
       dropdown.classList.remove('open');
       pickerArrow.classList.remove('open');
-      // Restore display label if nothing new was typed
       searchInput.value = selectedValue === 'none' ? '' : selectedLabel;
-      searchInput.placeholder = selectedValue === 'none'
-        ? 'No spoof ΓÇö share real location'
-        : selectedLabel;
+      searchInput.placeholder = selectedValue === 'none' ? 'No spoof \u2014 share real location' : selectedLabel;
     }
 
     function selectCountry(value, label) {
       selectedValue = value;
       selectedLabel = label;
       searchInput.value = value === 'none' ? '' : label;
-      searchInput.placeholder = value === 'none' ? 'No spoof ΓÇö share real location' : label;
+      searchInput.placeholder = value === 'none' ? 'No spoof \u2014 share real location' : label;
       dropdown.classList.remove('open');
       pickerArrow.classList.remove('open');
-
-      // Update badge
-      if (value === 'none') {
-        badgeEl.textContent = 'REAL';
-        badgeEl.className   = 'decoy-badge badge-real';
-      } else {
-        badgeEl.textContent = 'SPOOFED';
-        badgeEl.className   = 'decoy-badge badge-spoofed';
-      }
-
-      driftLat = 0;
-      driftLng = 0;
+      badgeEl.textContent = value === 'none' ? 'REAL' : 'SPOOFED';
+      badgeEl.className   = value === 'none' ? 'decoy-badge badge-real' : 'decoy-badge badge-spoofed';
+      driftLat = 0; driftLng = 0;
       stopCurrentMode();
       startSharing();
     }
 
-    pickerTrigger.addEventListener('click', () => {
-      if (dropdown.classList.contains('open')) {
-        closeDropdown();
-      } else {
-        searchInput.value = '';
-        openDropdown();
-      }
+    pickerTrigger.addEventListener('click', function() {
+      if (dropdown.classList.contains('open')) { closeDropdown(); } else { searchInput.value = ''; openDropdown(); }
     });
-
-    searchInput.addEventListener('input', () => {
+    searchInput.addEventListener('input', function() {
       renderDropdown(searchInput.value);
-      if (!dropdown.classList.contains('open')) {
-        dropdown.classList.add('open');
-        pickerArrow.classList.add('open');
-      }
+      if (!dropdown.classList.contains('open')) { dropdown.classList.add('open'); pickerArrow.classList.add('open'); }
+    });
+    searchInput.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeDropdown(); });
+    document.addEventListener('mousedown', function(e) {
+      if (!document.getElementById('country-picker').contains(e.target)) closeDropdown();
     });
 
-    searchInput.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') closeDropdown();
-    });
-
-    // Close when clicking outside
-    document.addEventListener('mousedown', (e) => {
-      if (!document.getElementById('country-picker').contains(e.target)) {
-        closeDropdown();
-      }
-    });
-
-    // Helper used by startSharing / badge logic
     function getSelectedCountry() { return selectedValue; }
 
-    let watchId       = null;  // GPS watch (only used in real-location mode)
-    let spoofInterval = null;  // Interval timer (only used in spoof mode)
-    let driftLat      = 0;
-    let driftLng      = 0;
+    let watchId = null, spoofInterval = null, driftLat = 0, driftLng = 0;
 
-    // ΓöÇΓöÇ Stop whatever is currently running ΓöÇΓöÇ
     function stopCurrentMode() {
-      if (watchId !== null) {
-        navigator.geolocation.clearWatch(watchId);
-        watchId = null;
-      }
-      if (spoofInterval !== null) {
-        clearInterval(spoofInterval);
-        spoofInterval = null;
-      }
+      if (watchId !== null) { navigator.geolocation.clearWatch(watchId); watchId = null; }
+      if (spoofInterval !== null) { clearInterval(spoofInterval); spoofInterval = null; }
     }
 
-    // ΓöÇΓöÇ Spoof mode: stream decoy coordinates on an interval, no GPS needed ΓöÇΓöÇ
-    function startSpoofMode(country) {      const anchor = DECOY_ANCHORS[country];
-      statusEl.textContent = '≡ƒÄ¡ Live ΓÇö spoofed location is being shared';
+    function startSpoofMode(country) {
+      const anchor = DECOY_ANCHORS[country];
+      statusEl.textContent = '\uD83C\uDFAD Live \u2014 spoofed location is being shared';
       statusEl.className   = 'status-active';
-      coordsEl.textContent = `Streaming from: ${anchor.lat.toFixed(4)}, ${anchor.lng.toFixed(4)}`;
-
+      coordsEl.textContent = 'Streaming from: ' + anchor.lat.toFixed(4) + ', ' + anchor.lng.toFixed(4);
       function sendSpoofed() {
         driftLat += (Math.random() - 0.5) * 0.00005;
         driftLng += (Math.random() - 0.5) * 0.00005;
-        driftLat  = Math.max(-0.0005, Math.min(0.0005, driftLat));
-        driftLng  = Math.max(-0.0005, Math.min(0.0005, driftLng));
-
-        socket.emit('send-location', {
-          sessionId,
-          lat: anchor.lat + driftLat,
-          lng: anchor.lng + driftLng,
-          accuracy: 10,
-          tz: anchor.tz
-        });
+        driftLat = Math.max(-0.0005, Math.min(0.0005, driftLat));
+        driftLng = Math.max(-0.0005, Math.min(0.0005, driftLng));
+        socket.emit('send-location', { sessionId: sessionId, lat: anchor.lat + driftLat, lng: anchor.lng + driftLng, accuracy: 10, tz: anchor.tz });
       }
-
-      sendSpoofed();                           // send immediately
-      spoofInterval = setInterval(sendSpoofed, 2000); // then every 2 seconds
+      sendSpoofed();
+      spoofInterval = setInterval(sendSpoofed, 2000);
     }
 
-    // ΓöÇΓöÇ Real mode: use the browser Geolocation API ΓöÇΓöÇ
     function startRealMode() {
       if (!navigator.geolocation) {
         statusEl.textContent = 'Geolocation is not supported by your browser.';
-        statusEl.className   = 'status-error';
+        statusEl.className = 'status-error';
         return;
       }
       statusEl.textContent = 'Requesting location access...';
-      statusEl.className   = '';
+      statusEl.className = '';
       coordsEl.textContent = 'Waiting for GPS fix...';
-
       watchId = navigator.geolocation.watchPosition(
-        (pos) => {
-          const { latitude, longitude, accuracy } = pos.coords;
-          // No tz for real location ΓÇö viewer shows their own local time
-          socket.emit('send-location', { sessionId, lat: latitude, lng: longitude, accuracy });
-          statusEl.textContent = '≡ƒôí Live ΓÇö real location is being shared';
+        function(pos) {
+          const lat = pos.coords.latitude, lng = pos.coords.longitude, acc = pos.coords.accuracy;
+          socket.emit('send-location', { sessionId: sessionId, lat: lat, lng: lng, accuracy: acc });
+          statusEl.textContent = '\uD83D\uDCE1 Live \u2014 real location is being shared';
           statusEl.className   = 'status-active';
-          coordsEl.textContent = `Your position: ${latitude.toFixed(5)}, ${longitude.toFixed(5)}  ┬▒${Math.round(accuracy)}m`;
+          coordsEl.textContent = 'Your position: ' + lat.toFixed(5) + ', ' + lng.toFixed(5) + '  \u00B1' + Math.round(acc) + 'm';
         },
-        (err) => {
-          statusEl.textContent = `Location error: ${err.message}`;
-          statusEl.className   = 'status-error';
+        function(err) {
+          statusEl.textContent = 'Location error: ' + err.message;
+          statusEl.className = 'status-error';
           coordsEl.textContent = '';
         },
         { enableHighAccuracy: true, maximumAge: 0, timeout: 8000 }
       );
     }
 
-    // ΓöÇΓöÇ Entry point ΓöÇΓöÇ
     function startSharing() {
       const country = getSelectedCountry();
-      if (country !== 'none') {
-        startSpoofMode(country);
-      } else {
-        startRealMode();
-      }
+      if (country !== 'none') { startSpoofMode(country); } else { startRealMode(); }
     }
 
     function stopSharing() {
       stopCurrentMode();
       socket.emit('stop-sharing', sessionId);
-
       statusEl.textContent = 'You have stopped sharing.';
       statusEl.className   = '';
       coordsEl.textContent = '';
@@ -790,55 +646,42 @@
       stopBtn.disabled    = true;
       stopBtn.textContent = 'Sharing Stopped';
       resumeBtn.style.display = 'inline-block';
-      document.querySelector('.pulse-icon').style.animation = 'none';
-      document.querySelector('.pulse-icon').textContent     = '≡ƒö┤';
+      pulseIcon.style.animation = 'none';
+      pulseIcon.textContent = '\uD83D\uDD34';
     }
 
     function resumeSharing() {
-      // Reset UI to active state
       stoppedBanner.style.display = 'none';
       stopBtn.disabled    = false;
       stopBtn.textContent = 'Stop Sharing';
       resumeBtn.style.display = 'none';
-      document.querySelector('.pulse-icon').style.animation = 'pulse 1.5s ease-in-out infinite';
-      document.querySelector('.pulse-icon').textContent     = '≡ƒôí';
-
-      // Rejoin the session room and restart streaming
+      pulseIcon.style.animation = 'pulse 1.5s ease-in-out infinite';
+      pulseIcon.textContent = '\uD83D\uDCE1';
       socket.emit('join-share', sessionId);
-      driftLat = 0;
-      driftLng = 0;
+      driftLat = 0; driftLng = 0;
       startSharing();
     }
 
     function copyLink() {
-      navigator.clipboard.writeText(viewerUrl).then(() => {
+      navigator.clipboard.writeText(viewerUrl).then(function() {
         const toast = document.getElementById('toast');
         toast.classList.add('show');
-        setTimeout(() => toast.classList.remove('show'), 2200);
+        setTimeout(function() { toast.classList.remove('show'); }, 2200);
       });
     }
 
-    // ΓöÇΓöÇ Admin session management ΓöÇΓöÇ
     const adminToken = sessionStorage.getItem('adminToken');
+    if (!adminToken) window.location.href = '/';
 
-    // If no token in sessionStorage, redirect to home for password
-    if (!adminToken) {
-      window.location.href = '/';
-    }
-
-    // Validate token with server on page load
-    (async () => {
+    (async function() {
       try {
         const res = await fetch('/validate-admin', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ token: adminToken })
         });
-        if (!res.ok) {
-          sessionStorage.removeItem('adminToken');
-          window.location.href = '/';
-        }
-      } catch { /* allow local session to continue on network error */ }
+        if (!res.ok) { sessionStorage.removeItem('adminToken'); window.location.href = '/'; }
+      } catch(e) { /* allow local session to continue on network error */ }
     })();
 
     function signOut() {
@@ -849,7 +692,6 @@
       });
       sessionStorage.removeItem('adminToken');
       stopCurrentMode();
-      // Do NOT emit stop-sharing ΓÇö last location stays visible to viewers
       window.location.href = '/';
     }
 

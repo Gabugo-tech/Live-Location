@@ -6,17 +6,17 @@
   <meta name="description" content="Viewing a live shared location in real time." />
   <meta name="theme-color" content="#0f172a" />
   <meta name="robots" content="noindex, nofollow" />
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>≡ƒôì</text></svg>" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#x1F4CD;</text></svg>" />
   <title>Live Location Viewer</title>
 
   <!-- Preconnect to speed up tile + CDN loading -->
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
-  <link rel="preconnect" href="https://tile.openstreetmap.org" crossorigin />
-  <link rel="dns-prefetch" href="https://a.tile.openstreetmap.org" />
-  <link rel="dns-prefetch" href="https://b.tile.openstreetmap.org" />
-  <link rel="dns-prefetch" href="https://c.tile.openstreetmap.org" />
+  <link rel="preconnect" href="https://basemaps.cartocdn.com" crossorigin />
+  <link rel="dns-prefetch" href="https://a.basemaps.cartocdn.com" />
+  <link rel="dns-prefetch" href="https://b.basemaps.cartocdn.com" />
+  <link rel="dns-prefetch" href="https://c.basemaps.cartocdn.com" />
+  <link rel="dns-prefetch" href="https://d.basemaps.cartocdn.com" />
 
-  <!-- Leaflet CSS ΓÇö jsdelivr is faster than unpkg globally -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.min.css" />
 
   <style>
@@ -31,7 +31,6 @@
       flex-direction: column;
     }
 
-    /* ΓöÇΓöÇ Top bar ΓöÇΓöÇ */
     .topbar {
       display: flex;
       align-items: center;
@@ -58,33 +57,20 @@
       flex-shrink: 0;
     }
 
-    .dot.waiting { background: #f59e0b; animation: none; }
-    .dot.stopped { background: #f87171; animation: none; }
+    .dot.waiting    { background: #f59e0b; animation: none; }
+    .dot.stopped    { background: #f87171; animation: none; }
     .dot.last-known { background: #f59e0b; animation: none; }
 
     @keyframes blink {
       0%, 100% { opacity: 1; }
-      50% { opacity: 0.2; }
+      50%       { opacity: 0.2; }
     }
 
-    #topbar-status {
-      font-size: 0.9rem;
-      color: rgba(255,255,255,0.75);
-    }
+    #topbar-status  { font-size: 0.9rem; color: rgba(255,255,255,0.75); }
+    #coords-display { font-size: 0.78rem; color: rgba(255,255,255,0.4); font-family: monospace; }
 
-    #coords-display {
-      font-size: 0.78rem;
-      color: rgba(255,255,255,0.4);
-      font-family: monospace;
-    }
+    #map { flex: 1; width: 100%; }
 
-    /* ΓöÇΓöÇ Map ΓöÇΓöÇ */
-    #map {
-      flex: 1;
-      width: 100%;
-    }
-
-    /* ΓöÇΓöÇ Info panel ΓöÇΓöÇ */
     .info-panel {
       background: rgba(255,255,255,0.05);
       border-top: 1px solid rgba(255,255,255,0.1);
@@ -95,11 +81,7 @@
       flex-shrink: 0;
     }
 
-    .info-item {
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-    }
+    .info-item { display: flex; flex-direction: column; gap: 2px; }
 
     .info-label {
       font-size: 0.68rem;
@@ -114,7 +96,6 @@
       font-family: monospace;
     }
 
-    /* ΓöÇΓöÇ Overlay for waiting state only ΓöÇΓöÇ */
     #overlay {
       position: absolute;
       inset: 0;
@@ -131,11 +112,10 @@
 
     #overlay.hidden { display: none; }
 
-    .overlay-icon { font-size: 52px; }
+    .overlay-icon  { font-size: 52px; }
     .overlay-title { font-size: 1.4rem; font-weight: 700; }
     .overlay-sub   { color: rgba(255,255,255,0.5); font-size: 0.9rem; }
 
-    /* ΓöÇΓöÇ Last-known banner (replaces full overlay when sharing stops) ΓöÇΓöÇ */
     #last-known-banner {
       display: none;
       align-items: center;
@@ -149,60 +129,55 @@
       z-index: 1000;
     }
 
-    #last-known-banner.visible { display: flex; }
+    #last-known-banner.visible      { display: flex; }
     #last-known-banner .banner-icon { font-size: 14px; }
     #last-known-banner .banner-time { margin-left: auto; font-family: monospace; color: rgba(255,255,255,0.4); font-size: 0.75rem; }
   </style>
 </head>
 <body>
 
-  <!-- Top status bar -->
   <div class="topbar">
     <div class="topbar-left">
       <div class="dot waiting" id="status-dot"></div>
       <span id="topbar-status">Waiting for sharer to connect...</span>
     </div>
-    <span id="coords-display">ΓÇö</span>
+    <span id="coords-display">&mdash;</span>
   </div>
 
-  <!-- Last-known location banner -->
   <div id="last-known-banner">
-    <span class="banner-icon">≡ƒö┤</span>
-    <span>Sharing stopped ΓÇö showing last known location</span>
+    <span class="banner-icon">&#x1F534;</span>
+    <span>Sharing stopped &mdash; showing last known location</span>
     <span class="banner-time" id="banner-time"></span>
   </div>
 
-  <!-- Map -->
   <div id="map"></div>
+
   <div class="info-panel">
     <div class="info-item">
       <span class="info-label">Latitude</span>
-      <span class="info-value" id="info-lat">ΓÇö</span>
+      <span class="info-value" id="info-lat">&mdash;</span>
     </div>
     <div class="info-item">
       <span class="info-label">Longitude</span>
-      <span class="info-value" id="info-lng">ΓÇö</span>
+      <span class="info-value" id="info-lng">&mdash;</span>
     </div>
     <div class="info-item">
       <span class="info-label">Accuracy</span>
-      <span class="info-value" id="info-acc">ΓÇö</span>
+      <span class="info-value" id="info-acc">&mdash;</span>
     </div>
     <div class="info-item">
       <span class="info-label">Last Update</span>
-      <span class="info-value" id="info-time">ΓÇö</span>
+      <span class="info-value" id="info-time">&mdash;</span>
     </div>
   </div>
 
-  <!-- Waiting / stopped overlay -->
   <div id="overlay">
-    <div class="overlay-icon">ΓÅ│</div>
+    <div class="overlay-icon">&#x23F3;</div>
     <div class="overlay-title">Waiting for location...</div>
     <div class="overlay-sub">The sharer hasn't sent their location yet.<br>This page will update automatically.</div>
   </div>
 
-  <!-- Leaflet JS ΓÇö jsdelivr -->
   <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.min.js"></script>
-  <!-- Socket.io -->
   <script src="/socket.io/socket.io.js"></script>
 
   <script>
@@ -211,42 +186,35 @@
 
     if (!sessionId) window.location.href = '/';
 
-    // ΓöÇΓöÇ Leaflet map setup ΓöÇΓöÇ
     const map = L.map('map', { zoomControl: true }).setView([0, 0], 2);
 
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '┬⌐ <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+      subdomains: 'abcd',
       maxZoom: 19
     }).addTo(map);
 
-    // Custom red marker icon
     const markerIcon = L.divIcon({
       className: '',
-      html: `<div style="
-        width:18px;height:18px;
-        background:#e94560;
-        border:3px solid #fff;
-        border-radius:50%;
-        box-shadow:0 2px 8px rgba(0,0,0,0.5);
-      "></div>`,
+      html: '<div style="width:18px;height:18px;background:#e94560;border:3px solid #fff;border-radius:50%;box-shadow:0 2px 8px rgba(0,0,0,0.5);"></div>',
       iconSize: [18, 18],
       iconAnchor: [9, 9]
     });
 
-    let marker      = null;
+    let marker         = null;
     let accuracyCircle = null;
-    let firstFix    = true;
+    let firstFix       = true;
 
-    const overlay        = document.getElementById('overlay');
-    const bannerEl       = document.getElementById('last-known-banner');
-    const bannerTime     = document.getElementById('banner-time');
-    const statusDot      = document.getElementById('status-dot');
-    const statusText     = document.getElementById('topbar-status');
-    const coordsDisplay  = document.getElementById('coords-display');
-    const infoLat        = document.getElementById('info-lat');
-    const infoLng        = document.getElementById('info-lng');
-    const infoAcc        = document.getElementById('info-acc');
-    const infoTime       = document.getElementById('info-time');
+    const overlay       = document.getElementById('overlay');
+    const bannerEl      = document.getElementById('last-known-banner');
+    const bannerTime    = document.getElementById('banner-time');
+    const statusDot     = document.getElementById('status-dot');
+    const statusText    = document.getElementById('topbar-status');
+    const coordsDisplay = document.getElementById('coords-display');
+    const infoLat       = document.getElementById('info-lat');
+    const infoLng       = document.getElementById('info-lng');
+    const infoAcc       = document.getElementById('info-acc');
+    const infoTime      = document.getElementById('info-time');
 
     function formatTime(timestamp, tz) {
       try {
@@ -256,42 +224,36 @@
       }
     }
 
-    function updateUI(lat, lng, accuracy, timestamp, isLastKnown = false, tz = null) {
-      const latlng = [lat, lng];
+    function updateUI(lat, lng, accuracy, timestamp, isLastKnown, tz) {
+      isLastKnown = isLastKnown || false;
+      tz = tz || null;
 
-      // Hide the waiting overlay
       overlay.classList.add('hidden');
 
       if (isLastKnown) {
-        // Show the last-known banner, leave map intact
         bannerEl.classList.add('visible');
-        bannerTime.textContent = `Last seen ${formatTime(timestamp, tz)}`;
-        statusDot.className = 'dot last-known';
+        bannerTime.textContent = 'Last seen ' + formatTime(timestamp, tz);
+        statusDot.className    = 'dot last-known';
         statusText.textContent = 'Last known location';
       } else {
-        // Live ΓÇö hide banner, show green dot
         bannerEl.classList.remove('visible');
-        statusDot.className = 'dot';
-        statusText.textContent = 'Live ΓÇö location updating';
+        statusDot.className    = 'dot';
+        statusText.textContent = 'Live \u2014 location updating';
       }
 
-      // Coords display
-      coordsDisplay.textContent = `${lat.toFixed(5)}, ${lng.toFixed(5)}`;
-
-      // Info strip ΓÇö time shown in spoofed city's timezone if available
+      coordsDisplay.textContent = lat.toFixed(5) + ', ' + lng.toFixed(5);
       infoLat.textContent  = lat.toFixed(6);
       infoLng.textContent  = lng.toFixed(6);
-      infoAcc.textContent  = accuracy ? `┬▒${Math.round(accuracy)} m` : 'ΓÇö';
+      infoAcc.textContent  = accuracy ? '\u00B1' + Math.round(accuracy) + ' m' : '\u2014';
       infoTime.textContent = formatTime(timestamp, tz);
 
-      // Marker
+      const latlng = [lat, lng];
       if (!marker) {
         marker = L.marker(latlng, { icon: markerIcon }).addTo(map);
       } else {
         marker.setLatLng(latlng);
       }
 
-      // Accuracy circle
       if (accuracy) {
         if (accuracyCircle) {
           accuracyCircle.setLatLng(latlng).setRadius(accuracy);
@@ -306,7 +268,6 @@
         }
       }
 
-      // Fly to location on first fix
       if (firstFix) {
         map.flyTo(latlng, 16, { duration: 1.5 });
         firstFix = false;
@@ -315,31 +276,27 @@
       }
     }
 
-    // ΓöÇΓöÇ Socket.io ΓÇö force WebSocket directly, skipping polling upgrade ΓöÇΓöÇ
     const socket = io({ transports: ['websocket'] });
     socket.emit('join-view', sessionId);
 
-    socket.on('location-update', ({ lat, lng, accuracy, timestamp, tz }) => {
-      // A fresh location-update always means live sharing is active
-      updateUI(lat, lng, accuracy, timestamp, false, tz || null);
+    socket.on('location-update', function(d) {
+      updateUI(d.lat, d.lng, d.accuracy, d.timestamp, false, d.tz || null);
     });
 
-    socket.on('waiting', () => {
+    socket.on('waiting', function() {
       overlay.classList.remove('hidden');
       bannerEl.classList.remove('visible');
-      statusDot.className = 'dot waiting';
+      statusDot.className    = 'dot waiting';
       statusText.textContent = 'Waiting for sharer to connect...';
     });
 
-    socket.on('sharing-stopped', (data) => {
-      // If the server sent last coords, show them on the map
+    socket.on('sharing-stopped', function(data) {
       if (data && data.lat != null) {
         updateUI(data.lat, data.lng, data.accuracy, data.timestamp, true, data.tz || null);
       } else {
-        // No coords at all ΓÇö just update the status bar, leave map as-is
         bannerEl.classList.add('visible');
         bannerTime.textContent = '';
-        statusDot.className = 'dot stopped';
+        statusDot.className    = 'dot stopped';
         statusText.textContent = 'Sharing stopped';
       }
     });
