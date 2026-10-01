@@ -24,7 +24,7 @@ app.use(helmet({
   contentSecurityPolicy: {
     directives: {
       defaultSrc: ["'self'"],
-      scriptSrc: ["'self'", "'unsafe-inline'", "cdn.jsdelivr.net", "cdn.socket.io"],
+      scriptSrc: ["'self'", "cdn.jsdelivr.net"],
       styleSrc:  ["'self'", "'unsafe-inline'", "cdn.jsdelivr.net"],
       imgSrc:    ["'self'", "data:", "*.tile.openstreetmap.org"],
       connectSrc:["'self'", "wss:", "ws:"],
@@ -33,6 +33,15 @@ app.use(helmet({
   },
   crossOriginEmbedderPolicy: false // needed for Leaflet tiles
 }));
+
+// ── Cache-Control: private pages must not be cached by proxies ──
+app.use((req, res, next) => {
+  const privatePaths = ['/share.html', '/view.html'];
+  if (privatePaths.some(p => req.path === p || req.path.startsWith(p))) {
+    res.setHeader('Cache-Control', 'no-store');
+  }
+  next();
+});
 
 // ── Rate limiting on auth endpoints ──
 const authLimiter = rateLimit({
