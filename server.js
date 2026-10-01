@@ -23,12 +23,13 @@ const validTokens = new Set();
 app.use(helmet({
   contentSecurityPolicy: {
     directives: {
-      defaultSrc: ["'self'"],
-      scriptSrc: ["'self'", "'unsafe-inline'", "cdn.jsdelivr.net"],
-      styleSrc:  ["'self'", "'unsafe-inline'", "cdn.jsdelivr.net"],
-      imgSrc:    ["'self'", "data:", "*.tile.openstreetmap.org"],
-      connectSrc:["'self'", "wss:", "ws:"],
-      fontSrc:   ["'self'", "cdn.jsdelivr.net"],
+      defaultSrc:    ["'self'"],
+      scriptSrc:     ["'self'", "'unsafe-inline'", "cdn.jsdelivr.net"],
+      scriptSrcAttr: ["'unsafe-inline'"], // allow onclick= handlers
+      styleSrc:      ["'self'", "'unsafe-inline'", "cdn.jsdelivr.net"],
+      imgSrc:        ["'self'", "data:", "*.tile.openstreetmap.org"],
+      connectSrc:    ["'self'", "wss:", "ws:"],
+      fontSrc:       ["'self'", "cdn.jsdelivr.net"],
     }
   },
   crossOriginEmbedderPolicy: false // needed for Leaflet tiles
