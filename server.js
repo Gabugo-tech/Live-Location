@@ -31,7 +31,7 @@ app.use(helmet({
       scriptSrc:     ["'self'", "'unsafe-inline'", "cdn.jsdelivr.net"],
       scriptSrcAttr: ["'unsafe-inline'"], // allow onclick= handlers
       styleSrc:      ["'self'", "'unsafe-inline'", "cdn.jsdelivr.net"],
-      imgSrc:        ["'self'", "data:", "server.arcgisonline.com"],
+      imgSrc:        ["'self'", "data:"],
       connectSrc:    ["'self'", "wss:", "ws:"],
       fontSrc:       ["'self'", "cdn.jsdelivr.net"],
     }
@@ -88,6 +88,29 @@ app.post('/logout-admin', (req, res) => {
   const { token } = req.body;
   if (token) validTokens.delete(token);
   res.json({ ok: true });
+});
+
+// ── Map tile proxy — forwards OSM tile requests with a proper User-Agent ──
+// This avoids OSM blocking the browser directly while complying with their policy
+app.get('/tiles/:z/:x/:y', async (req, res) => {
+  const { z, x, y } = req.params;
+  const tileUrl = `https://tile.openstreetmap.org/${z}/${x}/${y}.png`;
+  try {
+    const https = require('https');
+    const request = https.get(tileUrl, {
+      headers: {
+        'User-Agent': 'LiveLocationApp/1.0 (https://live-location-l5yg.onrender.com)',
+        'Referer': 'https://live-location-l5yg.onrender.com/'
+      }
+    }, (tileRes) => {
+      res.set('Content-Type', 'image/png');
+      res.set('Cache-Control', 'public, max-age=86400'); // cache tiles for 24h
+      tileRes.pipe(res);
+    });
+    request.on('error', () => res.status(502).end());
+  } catch (e) {
+    res.status(502).end();
+  }
 });
 
 // ── Create session — only with a valid admin token ──
