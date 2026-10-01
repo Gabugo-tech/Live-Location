@@ -31,7 +31,7 @@ app.use(helmet({
       scriptSrc:     ["'self'", "'unsafe-inline'", "cdn.jsdelivr.net"],
       scriptSrcAttr: ["'unsafe-inline'"], // allow onclick= handlers
       styleSrc:      ["'self'", "'unsafe-inline'", "cdn.jsdelivr.net"],
-      imgSrc:        ["'self'", "data:", "maps.wikimedia.org"],
+      imgSrc:        ["'self'", "data:", "server.arcgisonline.com"],
       connectSrc:    ["'self'", "wss:", "ws:"],
       fontSrc:       ["'self'", "cdn.jsdelivr.net"],
     }
